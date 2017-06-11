@@ -1,10 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <!--面版标题-->
+                <h2><i class="glyphicon glyphicon-info-sign"></i> 介绍</h2>
+            </h3>
+        </div>
+        <div class="panel-body">
+            <!--面版内容-->
+
+            <div class="col-lg-12 col-md-12">
+                <h1>自动化数据库平台 Wizard <br>
+                    <small>DBA、开发、自动化</small>
+                </h1>
+                <p>
+                    欢迎使用自动化数据库平台 Wizard，本系统基于Python 3.6.1、Django
+                    1.11.2实现一套面向DBA、开发的数据库管理平台，主要功能有数据库运行状态、数据库访问统计、数据库相关日志、响应时间、数据库监控、报警、数据库日常管理等，减少DBA大量重复工作。</p>
+
+                <p><b></b></p>
+
+            </div>
+        </div>
+
+        <!--<div class="panel-footer">
+            面版底部
+        </div>-->
+
+    </div>
+
+{% endblock %}

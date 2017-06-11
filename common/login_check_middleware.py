@@ -3,8 +3,6 @@
 import re
 from django.http import HttpResponseRedirect
 
-
-
 try:
     from django.utils.deprecation import MiddlewareMixin  # Django > 1.10.x
 except ImportError:

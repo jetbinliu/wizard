@@ -6,4 +6,5 @@ from django.shortcuts import render
 # Create your views here.
 def index(request):
     # return HttpResponse('hello world')
-    return render(request, 'common/login.html')
+    context = {}
+    return render(request, 'common/index.html', context)

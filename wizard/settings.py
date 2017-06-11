@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.login_check_middleware.LoginCheckMiddleware',
 ]
 
 ROOT_URLCONF = 'wizard.urls'
@@ -68,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'common.context_processors.messages',
             ],
         },
     },
@@ -154,25 +156,17 @@ STATICFILES_DIRS = [
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
-        }
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
     },
     'loggers': {
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
         },
-    }
+    },
 }
 
 #扩展django admin里users字段用到，指定了account/models.py里的class Users

@@ -11,8 +11,15 @@ class Users(AbstractUser):
     # 部门
     department = models.IntegerField(blank=True,default=1)
     # 角色
-    role = models.CharField('角色', max_length=20, choices=(('工程师','工程师'),('审核人','审核人'),('副审核人','副审核人')), default='工程师')
+    role = models.IntegerField(blank=True,default=5)
 
 class Department(models.Model):
     # 部门名称
     depart_name = models.CharField(max_length=50, blank=True)
+
+# 角色　角色只是相当于权限的一个集合,能够方便快捷的为用户分配权限   参看　auth_group
+class Role(models.Model):
+    #主键由Django生成
+    name = models.CharField(max_length=64) # 角色名称
+    code = models.CharField(max_length=32) # 角色code
+    desc = models.CharField(max_length=255) # 角色描述

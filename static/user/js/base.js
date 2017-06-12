@@ -2,30 +2,28 @@
  * Created by root on 17-6-10.
  */
 $(document).ready(function () {
-    // 加载完毕折叠所有主菜单
-    $('div[id^="collapse_"]').each(function () {
-        $(this).collapse('hide');
-    });
-
-    // 点开或者关闭主菜单时改变菜单右边图标
+    // 点开或者关闭主菜单时改变菜单右边"箭头"
     $(".menu").click(function () {
             /*切换折叠指示图标*/
-            if ($(this).children("span:last").attr("class") == "glyphicon glyphicon-menu-down") {
-                $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-up");
-            } else {
+            if ($(this).children("span:last").attr("class") == "glyphicon glyphicon-menu-left") {
                 $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-down");
+            } else {
+                $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-left");
             }
         }
     );
 
-    // 打开主菜单时折叠其他主菜单
-    $('.submenu').on('show.bs.collapse', function () {
+    // 打开某主菜单后折叠其他主菜单
+    $('.submenu').on('shown.bs.collapse', function () {
         currentId = $(this).attr('id');
 
         $(".submenu").each(function () {
             Id = $(this).attr('id');
             if (Id != currentId) {
-                $(this).attr("class", "submenu panel-collapse collapse");
+                // $(this).attr("class", "submenu panel-collapse collapse");
+                 $(this).collapse('hide');
+                 // 其它菜单折叠后修改"箭头"为向左
+                 $(this).prev().children("span").last().attr("class", "glyphicon glyphicon-menu-left");
             }
         });
     });

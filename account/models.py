@@ -3,6 +3,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+#角色分3种：
+#1.开发人员：可以提交SQL上线单的工程师们，username字段为登录用户名，realname字段为展示的中文名。
+#2.审核人：可以审核并执行SQL上线单的管理员、DBA、超级管理员们。
+#3.普通用户
+
+# 超级管理员
+# 管理员
+# DBA
+# 开发人员
+# 普通用户
+
 class Users(AbstractUser):
     # 真实姓名
     realname = models.CharField(max_length=32)

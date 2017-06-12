@@ -37,7 +37,10 @@ def index(request):
     for user in users:
         user.role = ROLE_DICT[user.role]
         user.department = DEPART_DICT[user.department]
-    context = {'users':users}
+    context = {
+        'users': users,
+        'currentMenu': 'userconfig',
+    }
     return render(request, 'account/index.html', context)
 
 

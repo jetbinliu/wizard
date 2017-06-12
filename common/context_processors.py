@@ -9,23 +9,33 @@ from account.account_dao import getRoleById
 leftMenuBtnsSuper = (
     {'key':'sysconfig', 'name':'系统管理', 'url':'', 'class':'glyphicon glyphicon-cog',
      'submenus':(
-         {'key':'userconfig', 'name':'用户管理', 'url':'/account/index/', 'class': 'glyphicon glyphicon-user'},
-        {'key':'masterconfig', 'name': '主库地址配置', 'url': '/admin/sql/master_config/', 'class': 'glyphicon glyphicon-user'},
-        {'key':'userconfig', 'name': '用户权限配置', 'url': '/admin/sql/users/', 'class': 'glyphicon glyphicon-th-large'},
-        {'key':'workflowconfig', 'name': '所有工单管理', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
+        {'key':'userconfig', 'name':'用户管理', 'url':'/account/index/', 'class': 'glyphicon glyphicon-user'},
+        {'key':'userauthority', 'name': '用户权限配置', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
     )},
+    {'key': 'dbconfig', 'name': '数据库管理', 'url': '', 'class': 'glyphicon glyphicon-oil',
+     'submenus': (
+         {'key': 'masterconfig', 'name': '主库地址配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
+     )},
+    {'key': 'dbconfig', 'name': '工单管理', 'url': '', 'class': 'glyphicon glyphicon-th-list',
+     'submenus': (
+         {'key': 'workflowconfig', 'name': 'SQL审核工单管理', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
+     )},
 )
 
 leftMenuBtnsCommon = (
-    {'key':'sysconfig', 'name':'SQL审核', 'url':'', 'class':'glyphicon glyphicon-asterisk',
+    {'key':'sysconfig', 'name':'SQL审核', 'url':'', 'class':'glyphicon glyphicon-tint',
      'submenus':(
-        {'key': 'allworkflow', 'name': '查看历史工单', 'url': '/allworkflow/', 'class': 'glyphicon glyphicon-home'},
-        {'key': 'submitsql', 'name': '发起SQL上线', 'url': '/submitsql/', 'class': 'glyphicon glyphicon-asterisk'},
+        {'key': 'allworkflow', 'name': '查看历史工单', 'url': '/sqlreview/allworkflow/', 'class': 'glyphicon glyphicon-home'},
+        {'key': 'submitsql', 'name': '发起SQL上线', 'url': '/sqlreview/submitsql/', 'class': 'glyphicon glyphicon-asterisk'},
         {'key': 'dbaprinciples', 'name': 'SQL审核必读', 'url': '/dbaprinciples/', 'class': 'glyphicon glyphicon-book'},
         {'key': 'charts', 'name': '统计图表展示', 'url': '/charts/', 'class': 'glyphicon glyphicon-file'},
     )},
-     {'key':'logadmin', 'name':'日志管理', 'url':'', 'class':'glyphicon glyphicon-asterisk', 'submenus':(
+     {'key':'logadmin', 'name':'日志管理', 'url':'', 'class':'glyphicon glyphicon-hdd', 'submenus':(
         {'key': 'workflowconfig', 'name': '日你啊老赵', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
+        {'key': 'workflowconfig', 'name': '日你啊老王 ', 'url': '/admin/sql/workflow/',
+         'class': 'glyphicon glyphicon-list-alt'},
+        {'key': 'workflowconfig', 'name': '日你啊李丁', 'url': '/admin/sql/workflow/',
+         'class': 'glyphicon glyphicon-list-alt'},
     )},
 )
 

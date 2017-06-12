@@ -60,20 +60,23 @@
         <div class="col-md-2 column">
             <div class="list-group" id="accordion">
                 <!--menu-->
+                <a class="list-group-item" href="/"><span>&nbsp;<span
+                        class="glyphicon glyphicon-home">平台首页</span></span></a>
+
                 {% for menu in leftMenuBtns %}
                     {% if menu.key == currentMenu %}
                         <a class="menu list-group-item active" data-toggle="collapse" data-parent="#accordion"
-                           href="#collapse_{{ forloop.counter }}"
+                            href="#collapse_{{ forloop.counter }}"
                     {% else %}
                         <a class="menu list-group-item" data-toggle="collapse" data-parent="#accordion"
-                           href="#collapse_{{ forloop.counter }}"
+                            href="#collapse_{{ forloop.counter }}"
                     {% endif %}
-                    <span><span class="{{ menu.class }}">{{ menu.name }}</span>&emsp;</span>
-                    <span class="glyphicon glyphicon-menu-down" style="float: right"></span>
-                    </a>
+                ><span>&nbsp;<span class="{{ menu.class }}">{{ menu.name }}</span></span>
+                    <span class="glyphicon glyphicon-menu-left" style="float: right"></span>
+                </a>
 
                     <!--submenus-->
-                    <div class="submenu panel-collapse collapse in" id="collapse_{{ forloop.counter }}">
+                    <div class="submenu collapse" id="collapse_{{ forloop.counter }}">
                         {% for submenu in menu.submenus %}
 
                             {% if submenu.key == currentMenu %}
@@ -82,28 +85,23 @@
                                 <a href="{{ submenu.url }}" class="list-group-item"
                             {% endif %}
 
-                            <span>&emsp;<span class="{{ submenu.class }}">{{ submenu.name }}</span></span>
-                            </a>
+                        ><span>&emsp;&nbsp;&nbsp;<span class="{{ submenu.class }}">{{ submenu.name }}</span></span>
+                        </a>
                         {% endfor %}
                     </div>
-
-
-
                 {% endfor %}
                 <!-- <a href="#" class="list-group-item"><span class="glyphicon glyphicon glyphicon-cog">&nbsp;功能模块5</span></a>
                 <a href="#" class="list-group-item"><span class="glyphicon glyphicon glyphicon glyphicon-file">&nbsp;功能模块6</span></a>
                 <a href="#" class="list-group-item"><span class="glyphicon glyphicon glyphicon glyphicon-list-alt">&nbsp;功能模块7</span></a>
                 <a href="#" class="list-group-item"><span class="glyphicon glyphicon glyphicon glyphicon-align-right">&nbsp;功能模块8</span></a>-->
             </div>
-
-
         </div>
-
         <div id="content" class="col-md-10 column user-center-div-col-md-10">
             {% block content %}
             {% endblock content %}
         </div>
     </div>
+
 
     <!-- 模态框（Modal） -->
     <div class="modal fade" id="alert-modal-container" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -132,6 +130,8 @@
         <p><strong>自动化数据库平台 Wizard.</strong>&nbsp; Developed by DBA.</p>
     </div>
 </div>
+
+
 <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery，务必先引入jquery js再引入bootstrap js) -->
 <script src="{% static 'jquery/jquery.min.js' %}"></script>
 <!-- 包括所有已编译的插件 -->

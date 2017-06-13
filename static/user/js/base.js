@@ -21,10 +21,21 @@ $(document).ready(function () {
             Id = $(this).attr('id');
             if (Id != currentId) {
                 // $(this).attr("class", "submenu panel-collapse collapse");
-                 $(this).collapse('hide');
-                 // 其它菜单折叠后修改"箭头"为向左
-                 $(this).prev().children("span").last().attr("class", "glyphicon glyphicon-menu-left");
+                $(this).collapse('hide');
+                // 其它菜单折叠后修改"箭头"为向左
+                $(this).prev().children("span").last().attr("class", "glyphicon glyphicon-menu-left");
             }
         });
     });
+
+    // 鼠标移动到菜单上方时打开二级菜单
+    $(".menu").hover(
+        function () {
+            $(this).next().collapse('show');
+            $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-down");
+        },
+        function () {
+
+        }
+    );
 });

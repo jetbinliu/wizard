@@ -2,61 +2,53 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             <!--面版标题-->
-            <i class="glyphicon glyphicon-list-alt"></i> 新增用户
+            <i class="glyphicon glyphicon-list-alt"></i> 新增集群
         </h3>
     </div>
     <div class="panel-body">
         <!--面版内容-->
-        <form class="form-horizontal" method="post" action="{% url 'account_add' %}"
+        <form class="form-horizontal" method="post" action="{% url 'dbconfig_add' %}"
               onsubmit="return validateCallback(this);">
             {% csrf_token %}
             <fieldset>
                 <div class="control-group">
-                    <label class="control-label">用&nbsp;&nbsp;户&nbsp;&nbsp;名<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="username"/>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label">真实姓名<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="realname"/>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label">电子邮件<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required email" type="text" name="email"/>
-                </div>
-
-                <div class="control-group">
-                    <label class="control-label">角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色&nbsp;</label>
-                    {% for key, value in ROLE_DICT.items %}
+                    <label class="control-label">集群类型<span style="color:#f00">*</span></label>
+                    {% for key, value in CLUSTER_TYPE.items %}
                         <label class="checkbox-inline">
-                            <input type="radio" name="role" value="{{ key }}"
-                                   {% if forloop.last %}checked{% endif %}/>
-                            {{ value }}
-                        </label>
+                            <input type="radio" name="cluster_type" value="{{ key }}" {% if forloop.first %}checked{% endif %}/>{{ value }}</label>
                     {% endfor %}
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门 <span
-                            style="color:#f00">*</span></label>
-                    <select name="department" data-placeholder="选择你的部门" id="department" data-rel="chosen"
-                            style="width:150px;">
-                        {% for key, value in DEPART_DICT.items %}
-                            <option value="{{ key }}">{{ value }}</option>
-                        {% endfor %}
-                    </select>
+                    <label class="control-label">集群名称<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge required" type="text" name="cluster_name"/>
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label">联系方式&nbsp;</label>
-                    <input class="input-xlarge" type="text" name="phone"/>
+                    <label class="control-label">集群地址<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge required" type="text" name="cluster_hosts"
+                    placeholder="多个地址请用逗号分隔"/>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">集群端口<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge required" type="text" name="cluster_port"/>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">登录用户<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge required" type="text" name="cluster_user"/>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">登录密码<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge required" type="password" name="cluster_password"/>
                 </div>
 
                 <br>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">保存</button>
-                    <!--<button class="btn" onclick="return httpRedirectAjax('{% url 'account_index' %}')">取消</button>-->
+                    <!--<button class="btn" onclick="return httpRedirectAjax('{% url 'dbconfig_index' %}')">取消</button>-->
                     <button class="btn" onclick="location.reload([bForceGet])">取消</button>
                 </div>
             </fieldset>

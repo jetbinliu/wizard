@@ -14,9 +14,9 @@ leftMenuBtnsSuper = (
     )},
     {'key': 'dbconfig', 'name': '数据库管理', 'url': '', 'class': 'glyphicon glyphicon-oil',
      'submenus': (
-         {'key': 'masterconfig', 'name': '主库地址配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
+         {'key': 'clusterconfig', 'name': '集群配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
      )},
-    {'key': 'dbconfig', 'name': '工单管理', 'url': '', 'class': 'glyphicon glyphicon-th-list',
+    {'key': 'orderconfig', 'name': '工单管理', 'url': '', 'class': 'glyphicon glyphicon-th-list',
      'submenus': (
          {'key': 'workflowconfig', 'name': 'SQL审核工单管理', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
      )},

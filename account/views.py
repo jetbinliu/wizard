@@ -35,8 +35,8 @@ def authenticate(request):
 def index(request):
     users = Users.objects.all()
     for user in users:
-        user.role = ROLE_DICT[user.role]
-        user.department = DEPART_DICT[user.department]
+        user.role = ROLE_DICT.get(user.role)
+        user.department = DEPART_DICT.get(user.department)
     context = {
         'users': users,
         'currentMenu': 'userconfig',

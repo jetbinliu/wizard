@@ -166,7 +166,7 @@ LOGGING = {
     'loggers': {
         'django.db.backends': {
             'handlers': ['console'],
-            'level': 'DEBUG' if DEBUG else 'INFO',
+            'level': 'WARNING' if DEBUG else 'INFO',
         },
     },
 }

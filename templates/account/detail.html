@@ -35,7 +35,6 @@
 
             <div class="control-group">
                 <label class="control-label">部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门:&nbsp;</label>
-                    {{ user.department }}
                     {% for key,value in DEPART_DICT.items %}
                         {% ifequal user.department key %}
                             {{ value }}

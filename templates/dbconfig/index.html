@@ -11,9 +11,8 @@
         <div class="panel-heading">
             <h3 class="panel-title">
                 <!--面版标题-->
-                <i class="glyphicon glyphicon-list-alt"></i> 用户管理
-                <!--<a href="{% url 'account_add' %}" onclick="return executeMenu(this);" style="float: right">-->
-                <a href="{% url 'account_add' %}" onclick="return executeMenu(this);">
+                <i class="glyphicon glyphicon-list-alt"></i> 集群管理
+                <a href="{% url 'dbconfig_add' %}" onclick="return executeMenu(this);">
                     <i class="glyphicon glyphicon-plus icon-white"></i>
                 </a>
             </h3>
@@ -24,45 +23,48 @@
                 <thead>
                 <tr>
                     <th>编号</th>
-                    <th>集群ID</th>
+                    <th>集群类型</th>
                     <th>集群名称</th>
-                    <th>主从库地址</th>
+                    <th>集群地址</th>
                     <th>集群端口</th>
                     <th>登录用户</th>
-                    <th>登录密码</th>
                     <th>更新时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for user in users %}
+                {% for cluster in clusters %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.realname }}</td>
-                        <td>{{ user.role }}</td>
-                        <td>{{ user.department }}</td>
-                        <td>{{ user.last_login|date:"Y-m-d H:i:s" }}</td>
+                        <td>{{ cluster.cluster_type }}</td>
+                        <td>{{ cluster.cluster_name }}</td>
+                        <td>
+                            {% for cluster_host in cluster.cluster_hosts %}
+                                {{ cluster_host }}{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ cluster.cluster_port }}</td>
+                        <td>{{ cluster.cluster_user }}</td>
+                        <td>{{ cluster.update_time |date:"Y-m-d H:i:s" }}</td>
                         <td class="center ">
-                            <a class="btn btn-xs btn-primary" href="{% url 'account_edit' user.id %}"
+                            <a class="btn btn-xs btn-primary" href="{% url 'dbconfig_edit' cluster.id %}"
                                onclick="return executeMenu(this);">
                                 <i class="glyphicon glyphicon-edit icon-white"></i>
                                 编辑
                             </a>
-                            <a class="btn btn-xs btn-info" href="{% url 'account_detail' user.id %}"
+                            <a class="btn btn-xs btn-info" href="{% url 'dbconfig_detail' cluster.id %}"
                                onclick="return executeMenu(this);">
                                 <i class="glyphicon glyphicon-search icon-white"></i>
                                 详细
                             </a>
-                            {% if item.username == 'admin' %}
-                                <a class="btn btn-xs btn-danger" href="{% url 'account_delete' user.id %}"
+                            {% if not user.username == 'admin' %}
+                                <a class="btn btn-xs btn-danger" href="{% url 'dbconfig_delete' cluster.id %}"
                                    onclick="return executeDelete(this);" title="您确定要删除该项吗?" disabled>
                                     <i class="glyphicon glyphicon-trash icon-white"></i>
                                     删除
                                 </a>
                             {% else %}
-                                <a class="btn btn-xs btn-danger" href="{% url 'account_delete' user.id %}"
+                                <a class="btn btn-xs btn-danger" href="{% url 'dbconfig_delete' cluster.id %}"
                                    title="您确定要删除该项吗?">
                                     <i class="glyphicon glyphicon-trash icon-white"></i>
                                     删除

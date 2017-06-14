@@ -10,7 +10,9 @@ from django.contrib.auth.models import AbstractUser
 
 # 超级管理员
 # 管理员
-# DBA
+# dba
+# leader
+# 项目管理
 # 开发人员
 # 普通用户
 

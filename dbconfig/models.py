@@ -15,6 +15,7 @@ class cluster_config(models.Model):
     cluster_password = models.CharField('登录集群的密码', max_length=300)
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     update_time = models.DateTimeField('更新时间', auto_now=True)
+    cluster_status = models.IntegerField('集群状态', default=1)
 
     def save(self, *args, **kwargs):
         pc = Prpcrypt()  # 初始化
@@ -25,4 +26,10 @@ class cluster_config(models.Model):
 CLUSTER_TYPE = {
     1: 'MySQL',
     2: 'Redis',
+}
+
+# 集群状态
+CLUSTER_STATUS = {
+    0: '离线',
+    1: '在线',
 }

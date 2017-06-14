@@ -2,9 +2,11 @@
 import json
 
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 
-from .models import cluster_config, CLUSTER_TYPE
+from .models import cluster_config, CLUSTER_TYPE, CLUSTER_STATUS
+from .dbconfig_dao import setClusterStatusByPort
 from common.aes_decryptor import Prpcrypt
 
 # Create your views here.
@@ -13,6 +15,7 @@ def index(request):
     clusters = cluster_config.objects.all()
     for cluster in clusters:
         cluster.cluster_type = CLUSTER_TYPE.get(cluster.cluster_type)
+        # cluster.cluster_status = CLUSTER_STATUS.get(cluster.cluster_status)
         cluster.cluster_hosts = json.loads(cluster.cluster_hosts)
     context = {
         'clusters': clusters,
@@ -73,13 +76,14 @@ def edit(request, cluster_id):
         cluster.cluster_port = request.POST.get("cluster_port")
         cluster.cluster_user = request.POST.get("cluster_user")
         cluster.cluster_password = request.POST.get("cluster_password")
+        cluster.cluster_status = request.POST.get("cluster_status")
         cluster.save()
         return HttpResponseRedirect("/dbconfig/index")
 
     pc = Prpcrypt()  # 初始化
     cluster.cluster_password = pc.decrypt(cluster.cluster_password)
     cluster.cluster_hosts = ",".join(json.loads(cluster.cluster_hosts))
-    context = {'cluster': cluster, 'CLUSTER_TYPE': CLUSTER_TYPE}
+    context = {'cluster':cluster, 'CLUSTER_TYPE':CLUSTER_TYPE, 'CLUSTER_STATUS':CLUSTER_STATUS}
     return render(request, 'dbconfig/edit.html', context)
 
 def detail(request, cluster_id):
@@ -100,3 +104,10 @@ def delete(request, cluster_id):
     # 删除此用户
     cluster.delete()
     return HttpResponseRedirect("/dbconfig/index")
+
+@csrf_exempt
+def setclusterstatus(request):
+    port = request.POST.get("port")
+    stat = request.POST.get("stat")
+    rets = setClusterStatusByPort(port,stat)
+    return HttpResponse(json.dumps(rets), content_type='application/json')

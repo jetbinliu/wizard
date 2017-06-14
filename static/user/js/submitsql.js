@@ -1,23 +1,3 @@
-function validateForm(element) {
-	var result = true;
-	element.find('[required]').each(
-		function () {
-			var fieldElement = $(this);
-			//如果为null则设置为''
-			var value = fieldElement.val() || '';
-			if (value) {
-				value = value.trim();
-			}
-			if (!value || value === fieldElement.attr('data-placeholder')) {
-				alert((fieldElement.attr('data-name') || this.name) + "不能为空！");
-				result = false;
-				return result;
-			}
-		}
-	);
-	return result;
-}
-
 $("#btn-submitsql").click(function (){
 	//获取form对象，判断输入，通过则提交
 	var formSubmit = $("#form-submitsql");
@@ -34,5 +14,26 @@ $("#review_man").change(function review_man(){
 });
 
 
-//增加副审核人(可选)
-$(function () { $('#collapseOne').collapse('hide')});
+function validateForm(element) {
+	var result = true;
+	element.find('[required]').each(
+		function () {
+			var fieldElement = $(this);
+			//如果为null则设置为''
+			var value = fieldElement.val() || '';
+			if (value) {
+				value = value.trim();
+			}
+			if (!value || value === fieldElement.attr('data-placeholder')) {
+				alert((fieldElement.attr('data-name') || this.name) + "不能为空!!！");
+				// $('#alert-modal-body').html(data.msg);
+				// $('#alert-modal').modal({
+				// 	keyboard: true
+				// });
+				result = false;
+				return result;
+			}
+		}
+	);
+	return result;
+}

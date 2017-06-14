@@ -29,13 +29,13 @@ $(document).ready(function () {
     });
 
     // 鼠标移动到菜单上方时打开二级菜单
-    $(".menu").hover(
-        function () {
-            $(this).next().collapse('show');
-            $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-down");
-        },
-        function () {
-
-        }
-    );
+    // $(".menu").hover(
+    //     function () {
+    //         $(this).next().collapse('show');
+    //         $(this).children("span:last").attr("class", "glyphicon glyphicon-menu-down");
+    //     },
+    //     function () {
+    //
+    //     }
+    // );
 });

@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^edit/(?P<cluster_id>\d+)/$', views.edit, name="dbconfig_edit"),
     url(r'^detail/(?P<cluster_id>\d+)/$', views.detail, name="dbconfig_detail"),
     url(r'^delete/(?P<cluster_id>\d+)/$', views.delete, name="dbconfig_delete"),
+    url(r'^setclusterstatus/$', views.setclusterstatus, name='setclusterstatus' ),
 ]

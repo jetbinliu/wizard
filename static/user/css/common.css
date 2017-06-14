@@ -1,3 +1,26 @@
+.switchon{
+ display:inline-block;
+ width:82px;
+ height:25px;
+ margin-top:2px;
+ margin-bottom:0px;
+ background:url("../../img/switch.gif")  no-repeat;
+ cursor:pointer;
+ background-position:0 -2px;
+}
+
+.switchoff{
+ display:inline-block;
+ width:82px;
+ height:25px;
+ margin-top:2px;
+ margin-bottom:0px;
+ background:url("../../img/switch.gif")  no-repeat;
+ cursor:pointer;
+ background-position:0 -38px;
+}
+
+/*面板右侧+号*/
 .panel-title a {
     float: right
 }
@@ -5,3 +28,4 @@
 #modal-container-account_add {
 
 }
+

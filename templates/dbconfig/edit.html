@@ -44,6 +44,20 @@
                     <input class="input-xlarge required" type="password" name="cluster_password" value="{{ cluster.cluster_password }}"/>
                 </div>
 
+                <div class="control-group">
+                    <label class="control-label">集群状态<span style="color:#f00">*</span></label>
+                    <select name="cluster_status" data-placeholder="选择集群状态" id="cluster_status" data-rel="chosen"
+                            style="width:150px;">
+                        {% for key,value in CLUSTER_STATUS.items %}
+                            {% ifequal cluster.cluster_status key %}
+                                <option value="{{ key }}" selected="selected">{{ value }}</option>
+                            {% else %}
+                                <option value="{{ key }}">{{ value }}</option>
+                            {% endifequal %}
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <br>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">保存</button>

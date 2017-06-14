@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
+import json
 
 from django.shortcuts import render
 
-
 from account.models import Users
-from dbconfig.dbconfig_dao import getClusterInfo
+from dbconfig.dbconfig_dao import getMySQLClusterDbs, getAllMySQLClusterInfo
 
 # Create your views here.
 def allworkflow(request):
@@ -14,18 +14,38 @@ def allworkflow(request):
 # 提交SQL的页面
 def submitsql(request):
     # 获取所有在线集群信息
-    dictAllClusterDetail = getClusterInfo(flag='online')
-    if len(dictAllClusterDetail) == 0:
+    clusters = getAllMySQLClusterInfo(flag='online')
+    if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'sqlreview/error.html', context)
-    #
+
+    # 获取所有集群名称
+    listAllClusterName = [cluster.cluster_name for cluster in clusters]
+    # 转换为集合（间接去重）
+    setAllClusterName = set(listAllClusterName)
+    if len(setAllClusterName) < len(listAllClusterName):
+        context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
+        return render(request, 'sqlreview/error.html', context)
+
+    # cluster_hosts列表0号位为主库地址, 登录获取databaase列表
     dictAllClusterDb = {}
-    for key, value in dictAllClusterDetail.items():
-        dictAllClusterDb[key] = value[3]
+    for cluster in clusters:
+        try:
+            dbs = getMySQLClusterDbs(
+                json.loads(cluster.cluster_hosts)[0], cluster.cluster_port,
+                cluster.cluster_user, cluster.cluster_password
+            )
+            dictAllClusterDb[cluster.cluster_name] = dbs
+        except Exception as e:
+            context = {'errMsg': '%s' % e}
+            return render(request, 'sqlreview/error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单
     loginUser = request.session.get('login_username')
     reviewMen = Users.objects.values('username','email','role').filter(role__lte=5).exclude(username=loginUser)
+    if len(reviewMen) == 0:
+       context = {'errMsg': '审核人为0, 请配置审核人。'}
+       return render(request, 'sqlreview/error.html', context)
 
     context = {
         'dictAllClusterDb': dictAllClusterDb,

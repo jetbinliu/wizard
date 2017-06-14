@@ -8,12 +8,6 @@ $("#btn-submitsql").click(function (){
 });
 
 
-$("#review_man").change(function review_man(){
-    var review_man = $(this).val();
-    $("div#" + review_man).hide();
-});
-
-
 function validateForm(element) {
 	var result = true;
 	element.find('[required]').each(
@@ -37,3 +31,21 @@ function validateForm(element) {
 	);
 	return result;
 }
+
+
+$("#review_man").change(function () {
+    var review_man = $(this).val();
+    $("#sub_review_man_" + review_man).hide();
+});
+
+$(".sub_review_man").change(function () {
+	var sub_review_man = $(this).val();
+	$("select[name=review_man] option").each(function () {
+		if ($(this) == sub_review_man) {
+			$(this).remove();
+		}
+    });
+
+});
+
+

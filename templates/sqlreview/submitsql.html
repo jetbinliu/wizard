@@ -49,7 +49,9 @@
                                 data-placeholder="请选择RD审核人:" required>
                             <option value="is-empty" disabled="" selected="selected">请选择审核人:</option>
                             {% for man in reviewMen %}
-                                <option value="{{ man.username }}">{{ man.username }}</option>
+                                {% if not man.username == 'admin' %}
+                                    <option value="{{ man.username }}">{{ man.username }}</option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                     </div>
@@ -58,15 +60,15 @@
                             <div class="panel-heading">
                                 <i class="glyphicon glyphicon-plus icon-white"></i>&nbsp;
                                 <a data-toggle="collapse" data-parent="#accordion"
-                                   href="#sub_review_man">添加副审核人(可选)</a>
+                                   href="#collapse_sub_review_man">添加副审核人(可选)</a>
                             </div>
-                            <div id="sub_review_man" class="panel-collapse collapse">
+                            <div id="collapse_sub_review_man" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     {% for man in reviewMen %}
                                         {% if not man.username == 'admin' %}
-                                            <label class="checkbox" style="font-weight: normal">
-                                                <input type="radio" name="sub_review_man" value="{{ man.username }}"
-                                                       {% if forloop.first %}checked{% endif %}/>
+                                            <label class="checkbox" id="sub_review_man_{{ man.username }}" style="font-weight: normal">
+                                                <input class="sub_review_man" type="radio" name="sub_review_man"
+                                                       value="{{ man.username }}"/>
                                                 {{ man.username }}
                                             </label>
                                         {% endif %}

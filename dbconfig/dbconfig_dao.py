@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-import json
-
 from django.db.models import Q
 
 from .models import cluster_config as Cluster
@@ -10,7 +8,7 @@ import pymysql as mdb
 
 
 
-def getClusterDbs(host, port, user, passwd):
+def getMySQLClusterDbs(host, port, user, passwd):
     dbs = []
     try:
         # Connect to the cluster database
@@ -37,9 +35,8 @@ def getClusterDbs(host, port, user, passwd):
         connection.close()
     return dbs
 
-def getClusterInfo(flag='online'):
+def getAllMySQLClusterInfo(flag='online'):
 
-    dictAllClusterDetail = {}
     # 查询在线集群信息
     if flag == 'online':
         clusters = Cluster.objects.filter(Q(cluster_type=1) and Q(cluster_status=1))
@@ -52,27 +49,9 @@ def getClusterInfo(flag='online'):
     else:
         return None
     for cluster in clusters:
-        cluster_id = cluster.id
-        cluster_name = cluster.cluster_name
-        cluster_host = json.loads(cluster.cluster_hosts)[0]
-        cluster_port = cluster.cluster_port
-        cluster_user = cluster.cluster_user
-        cluster_password = cluster.cluster_password
-        cluster_create_time = cluster.create_time
-        cluster_status = cluster.cluster_status
-
         pc = Prpcrypt()  # 初始化
-        cluster_password = pc.decrypt(cluster_password)
-        if cluster_status :
-            try:
-                dbs = getClusterDbs(cluster_host, cluster_port, cluster_user, cluster_password)
-            except Exception as e:
-                dbs = [e]
-        else:
-            dbs = []
-        dictAllClusterDetail[cluster_name] = [cluster_id, cluster_host, cluster_port, dbs,
-                                              cluster_status, cluster_create_time]
-    return dictAllClusterDetail
+        cluster.cluster_password = pc.decrypt(cluster.cluster_password)
+    return clusters
 
 
 def setClusterStatusByPort(port,stat):

@@ -32,20 +32,43 @@ function validateForm(element) {
 	return result;
 }
 
+$(document).ready(function () {
+	// 定义一个空数组
+	var sub_review_mans = [];
+	// $('input[id^="sub_review_man_"]').each(function () {
+	// 获取所有审核人, 并存入数组
+	$("input.sub_review_man").each(function () {
+		sub_review_mans.push($(this).val());
+	});
 
-$("#review_man").change(function () {
-    var review_man = $(this).val();
-    $("#sub_review_man_" + review_man).hide();
+	$("#review_man").change(function () {
+		var review_man = $(this).val();
+		alert(review_man)
+	});
 });
 
-$(".sub_review_man").change(function () {
-	var sub_review_man = $(this).val();
-	$("select[name=review_man] option").each(function () {
-		if ($(this) == sub_review_man) {
-			$(this).remove();
-		}
-    });
 
-});
+
+// $("#review_man").change(function () {
+//     var review_man = $(this).val();
+//
+//     console.log(review_man);
+//     $("#sub_review_man_" + review_man).hide();
+//
+// 		if ($(this).val() != review_man) {
+// 			$(this).show();
+// 		}
+//     });
+// });
+//
+// $(".sub_review_man").change(function () {
+// 	var sub_review_man = $(this).val();
+// 	alert(sub_review_man);
+// 	$("select[name=review_man] option").each(function () {
+// 		if ($(this).val() == "is-empty" || $(this).val() == sub_review_man) {
+// 			$(this).attr("disabled", "");
+// 		} else {console.log($(this).val());}
+// 	});
+// });
 
 

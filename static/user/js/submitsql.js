@@ -53,5 +53,17 @@ $(document).ready(function () {
         });
 	});
 
+	// 点击“添加副审核人”时判断，如果还未选择主审核人则：修改折叠窗属性使不能打开并弹窗提示
+	$("#add_sub_review_man").click(function () {
+		var reviewMan = $("#review_man").val();
+		if (reviewMan == null) {
+			$("#collapse_sub_review_man").attr('class', "panel-collapse collapse in");
+			var msgbox = "请务必选择主审核人！";
+			$('#alert-modal-body').html(msgbox);
+			$('#alert-modal').modal({
+				keyboard: true
+			});
+		}
+    });
 });
 

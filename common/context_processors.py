@@ -3,7 +3,7 @@
 from collections import OrderedDict
 
 from account.models import Users
-from account.account_dao import getRoleById
+from account.accountDal import getRoleById
 
 
 leftMenuBtnsSuper = (

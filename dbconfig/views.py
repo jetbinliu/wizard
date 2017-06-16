@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 
 from .models import cluster_config, CLUSTER_TYPE, CLUSTER_STATUS
-from .dbconfig_dao import setClusterStatusByPort
+from .dbconfigDal import setClusterStatusByPort
 from common.aes_decryptor import Prpcrypt
 
 # Create your views here.

@@ -8,7 +8,7 @@ from django.contrib.auth.hashers import make_password
 # from django.utils import simplejson
 
 from .models import Users
-from .account_dao import DEPART_DICT, ROLE_DICT
+from .accountDal import DEPART_DICT, ROLE_DICT
 
 # Create your views here.
 # 用户登录

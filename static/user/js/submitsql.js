@@ -18,12 +18,12 @@ function validateForm(element) {
 			if (value) {
 				value = value.trim();
 			}
-			if (!value || value === fieldElement.attr('data-placeholder')) {
-				alert((fieldElement.attr('data-name') || this.name) + "不能为空!!！");
-				// $('#alert-modal-body').html(data.msg);
-				// $('#alert-modal').modal({
-				// 	keyboard: true
-				// });
+			if (! value || value === fieldElement.attr('data-placeholder')) {
+				var msgbox = (fieldElement.attr('data-name') || this.name) + "不能为空!!!";
+				$('#alert-modal-body').html(msgbox);
+				$('#alert-modal').modal({
+					keyboard: true
+				});
 				result = false;
 				return result;
 			}
@@ -34,41 +34,24 @@ function validateForm(element) {
 
 $(document).ready(function () {
 	// 定义一个空数组
-	var sub_review_mans = [];
+	var review_mans = [];
 	// $('input[id^="sub_review_man_"]').each(function () {
-	// 获取所有审核人, 并存入数组
-	$("input.sub_review_man").each(function () {
-		sub_review_mans.push($(this).val());
+	// 遍历获.sub_review_man取所有审核人, 并存入数组
+	$(".sub_review_man").each(function () {
+		review_mans.push($(this).val());
 	});
 
+	// 选中主审核人，则在副审核人里把他隐藏
 	$("#review_man").change(function () {
 		var review_man = $(this).val();
-		alert(review_man)
+		$.each(review_mans, function (index,value) {
+			if (value == review_man) {
+				$("#sub_review_man_" + value).hide(1000);
+			} else {
+				$("#sub_review_man_" + value).show(1000);
+			}
+        });
 	});
+
 });
-
-
-
-// $("#review_man").change(function () {
-//     var review_man = $(this).val();
-//
-//     console.log(review_man);
-//     $("#sub_review_man_" + review_man).hide();
-//
-// 		if ($(this).val() != review_man) {
-// 			$(this).show();
-// 		}
-//     });
-// });
-//
-// $(".sub_review_man").change(function () {
-// 	var sub_review_man = $(this).val();
-// 	alert(sub_review_man);
-// 	$("select[name=review_man] option").each(function () {
-// 		if ($(this).val() == "is-empty" || $(this).val() == sub_review_man) {
-// 			$(this).attr("disabled", "");
-// 		} else {console.log($(this).val());}
-// 	});
-// });
-
 

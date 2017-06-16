@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'common',
     'sqlreview',
     'dbconfig',
+    'conf',
 ]
 
 MIDDLEWARE = [

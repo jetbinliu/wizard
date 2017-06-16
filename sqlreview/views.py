@@ -4,7 +4,7 @@ import re
 import json
 import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 from account.models import Users
@@ -48,7 +48,7 @@ def allworkflow(request):
             context = {'errMsg': 'pageNo参数不是int.'}
             return render(request, 'sqlreview/error.html', context)
 
-    loginUser = request.session.get('login_username', False)
+    loginUser = request.session.get('login_username')
     # 查询workflow model，根据pageNo和navStatus获取对应的内容
     offset = pageNo * PAGE_LIMIT
     limit = offset + PAGE_LIMIT
@@ -57,7 +57,7 @@ def allworkflow(request):
     listWorkflow = []
     # 查询全部流程
     loginUserOb = Users.objects.get(username=loginUser)
-    if navStatus == 'all' and loginUserOb.role == '审核人':
+    if navStatus == 'all' and loginUserOb.role <= 5:
         # 这句话等同于select * from sql_workflow order by create_time desc limit {offset, limit};
         listWorkflow = workflow.objects.exclude(status=2).order_by(
             '-create_time')[offset:limit]
@@ -84,9 +84,13 @@ def allworkflow(request):
         context = {'errMsg': '传入的navStatus参数有误！'}
         return render(request, 'sqlreview/error.html', context)
 
-    context = {'currentMenu': 'allworkflow', 'listWorkflow': listWorkflow, 'pageNo': pageNo, 'navStatus': navStatus,
+    context = {'currentMenu': 'allworkflow',
+               'listWorkflow': listWorkflow,
+               'WORKFLOW_STATUS': WORKFLOW_STATUS,
+               'pageNo': pageNo,
+               'navStatus': navStatus,
                'PAGE_LIMIT': PAGE_LIMIT}
-    return render(request, 'sqlreview/allWorkflow.html', context)
+    return render(request, 'sqlreview/allworkflow.html', context)
 
 # 提交SQL的页面
 def submitsql(request):
@@ -200,19 +204,22 @@ def autoreview(request):
                 # 不发邮件
                 pass
 
-    return HttpResponseRedirect('/detail/' + str(workflowId) + '/')
+    return HttpResponseRedirect('/sqlreview/detail/' + str(workflowId) + '/')
 
 
 #展示SQL工单详细内容，以及可以人工审核，审核通过即可执行
 def detail(request, workflowId):
     workflowDetail = get_object_or_404(workflow, pk=workflowId)
     listContent = None
-    if workflowDetail.status in (Const.workflowStatus['finish'], Const.workflowStatus['exception']):
+    if workflowDetail.status in (7, 8):
         listContent = json.loads(workflowDetail.execute_result)
     else:
         listContent = json.loads(workflowDetail.review_content)
-    context = {'currentMenu':'allworkflow', 'workflowDetail':workflowDetail, 'listContent':listContent}
-    return render(request, 'detail.html', context)
+    context = {'currentMenu':'allworkflow',
+               'workflowDetail':workflowDetail,
+               'WORKFLOW_STATUS': WORKFLOW_STATUS,
+               'listContent':listContent}
+    return render(request, 'sqlreview/detail.html', context)
 
 
 

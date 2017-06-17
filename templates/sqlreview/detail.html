@@ -35,27 +35,29 @@
                 {{ workflowDetail.engineer }}
             </td>
             <td>
-                {{ workflowDetail.review_man }}
+                {% for reviewMan in reviewMans %}
+                    {{ reviewMan }}{% if not forloop.last %} {% endif %}
+                {% endfor %}
             </td>
             <td>
                 {{ workflowDetail.cluster_name }}
             </td>
             <td>
-                {{ workflowDetail.create_time }}
+                {{ workflowDetail.create_time | date:"Y-m-d H:i:s" }}
             </td>
             <td>
-                {{ workflowDetail.finish_time }}
+                {{ workflowDetail.finish_time | date:"Y-m-d H:i:s" }}
             </td>
             <td>
-                {{ workflowDetail.is_backup }}
+                {% if workflowDetail.is_backup == 1 %}
+                    是
+                {% else %}
+                    否
+                {% endif %}
             </td>
             <td>
                 <font color="red"><B>
-                    {% for key, value in WORKFLOW_STATUS.items %}
-                        {% if key == workflow.status %}
-                            {{ value }}
-                        {% endif %}
-                    {% endfor %}
+                    {{ workflowDetail.status }}
                 </B></font>
             </td>
         </tr>
@@ -113,21 +115,57 @@
         </tbody>
     </table>
     {% if workflowDetail.status == '等待审核人审核' %}
-        {% if workflowDetail.review_man == loginUser %}
-            <form action="/execute/" method="post" style="display:inline-block;">
+        {% if user.username in reviewMans %}
+            <form action="/sqlreview/reject/" method="post" style="display:inline-block;">
                 {% csrf_token %}
                 <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
-                <input type="submit" id="btnExecute" type="button" class="btn btn-primary btn-default"
-                       data-loading-text="Loading..." value="审核通过，执行"/>
+                <input type="hidden" name="rejected_man" value="{{ user.username }}">
+                <a id="modal-reject" href="#modal-container-reject" role="button" class="btn btn-danger" data-toggle="modal">驳回工单</a>
+
+			    <div class="modal fade" id="modal-container-reject" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			    	<div class="modal-dialog">
+			    		<div class="modal-content">
+			    			<div class="modal-header">
+			    				 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    				<h4 class="modal-title" id="myModalLabel">
+			    					驳回意见
+			    				</h4>
+			    			</div>
+			    			<div class="modal-body">
+                                <textarea id="reject_opinion" name="reject_opinion" class="form-control" data-name="驳回意见"
+                                          placeholder="请在此提交驳回意见...(字数限制50)" rows="2" maxlength="50" required></textarea>
+			    			</div>
+			    			<div class="modal-footer">
+			    				 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button> <button type="submit" class="btn btn-primary">确定</button>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
             </form>
+            <form action="/sqlreview/execute/" method="post" style="display:inline-block;">
+                {% csrf_token %}
+                <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
+                <input type="hidden" name="reviewed_man" value="{{ user.username }}">
+                <input type="submit" id="btnExecute" type="button" class="btn btn-primary btn-default"
+                       data-loading-text="Loading..." value="审核通过"/>
+            </form>
+        {% elif user.username == workflowDetail.engineer %}
+			<form action="/sqlreview/cancel/" method="post" style="display:inline-block;">
+				{% csrf_token %}
+				<input type="hidden" name="workflowid" value="{{workflowDetail.id}}">
+				<input type="submit" id="btnCancel" type="button" class="btn btn-warning" data-loading-text="Loading..." value="撤回工单" />
+			</form>
         {% endif %}
 
-        <form action="/cancel/" method="post" style="display:inline-block;">
-            {% csrf_token %}
-            <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
-            <input type="submit" id="btnCancel" type="button" class="btn btn-default" data-loading-text="Loading..."
-                   value="终止流程"/>
-        </form>
+    {% elif workflowDetail.status == '审核人驳回' %}
+        <div class="alert alert-dismissable alert-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4>
+                驳回 !
+            </h4> <strong>{{ notes.rejected_man }}：</strong> {{ workflowDetail.reject_opinion }}
+            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" class="alert-link">请修改</a>
+        </div>
+
     {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == '是' %}
         <form action="/rollback/" method="get" style="display:inline-block;">
             {% csrf_token %}

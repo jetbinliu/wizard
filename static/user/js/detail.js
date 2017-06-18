@@ -1,15 +1,15 @@
 $(document).ready(function (){
-    //
+    // 如果正在执行修改动作的当前登录用户，不是发起人，则异常.
     $("#reject_modification").click(function () {
         var loginUser = $("#loginUser").text().split('(')[0];
         var engineer = $("#id_engineer").text();
         if (loginUser != engineer) {
+            $(this).attr('href', '#');
             var msgbox = '当前登录用户不是发起人，请重新登录.';
             $('#alert-modal-body').html(msgbox);
             $('#alert-modal').modal({
                 keyboard: true
             });
-            $(this).attr('href', '#');
         }
     });
 

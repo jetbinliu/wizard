@@ -359,7 +359,7 @@ def reject(request):
     workflowId = int(workflowId)
     workflowDetail = workflow.objects.get(id=workflowId)
 
-    # 服务器端二次验证，如果正在执行终止动作的当前登录用户，不是审核人，则异常.
+    # 服务器端二次验证，如果正在执行修改动作的当前登录用户，不是审核人，则异常.
     loginUser = request.session.get('login_username', False)
     if loginUser is None or loginUser not in json.loads(workflowDetail.review_man):
         context = {'errMsg': '当前登录用户不是审核人，请重新登录.'}

@@ -27,6 +27,8 @@ def mdb(sql, host, port, user, passwd, db='', dictType = False, ex = False):
                 results = cursor.fetchall()
                 if ex:
                     conn.commit()
+        except pymysql.Error as e:
+            print("Mysql Error %d: %s" % (e.args[0], e.args[1]))
         finally:
             conn.close()
     else:
@@ -36,6 +38,8 @@ def mdb(sql, host, port, user, passwd, db='', dictType = False, ex = False):
                 results = cursor.fetchall()
                 if ex:
                     conn.commit()
+        except pymysql.Error as e:
+            print("Mysql Error %d: %s" % (e.args[0], e.args[1]))
         finally:
             conn.close()
     return results

@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+import json
+
 from django.db.models import Q
 
 from .models import cluster_config as Cluster
@@ -52,6 +54,19 @@ def getAllMySQLClusterInfo(flag='online'):
         pc = Prpcrypt()  # 初始化
         cluster.cluster_password = pc.decrypt(cluster.cluster_password)
     return clusters
+
+
+# 根据集群名获取主库连接字符串，并封装成一个dict
+def getMasterConnStr(clusterName):
+    listMasters = Cluster.objects.filter(cluster_name=clusterName)
+
+    masterHost = json.loads(listMasters[0].cluster_hosts)[0]
+    masterPort = listMasters[0].cluster_port
+    masterUser = listMasters[0].cluster_user
+    masterPassword = prpCryptor.decrypt(listMasters[0].cluster_password)
+    dictConn = {'masterHost': masterHost, 'masterPort': masterPort, 'masterUser': masterUser,
+                'masterPassword': masterPassword}
+    return dictConn
 
 
 def setClusterStatusByPort(port,stat):

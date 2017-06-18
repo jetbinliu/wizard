@@ -7,6 +7,8 @@
 
             <form id="form-submitsql" action="/sqlreview/autoreview/" method="post" class="form-horizontal" role="form">
                 {% csrf_token %}
+                <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
+
                 <div class="col-md-8 column">
                     <textarea id="sql_content" name="sql_content" class="form-control" data-name="SQL内容"
                               placeholder="请在此提交SQL，请以分号结尾。例如：use test; create table t1(id int)engine=innodb;" rows=20

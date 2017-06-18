@@ -13,6 +13,9 @@ $(document).ready(function (){
         }
     });
 
+    // 撤回工单小提示
+    $("#btnCancel").tooltip({html : true });
+
     var status = $("#workflowDetail_status").text();
     if (status=="等待审核人审核"){
     setInterval("startRequest()",1000);

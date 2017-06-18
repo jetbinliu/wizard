@@ -114,7 +114,17 @@
 
         </tbody>
     </table>
-    {% if workflowDetail.status == '等待审核人审核' %}
+
+    {% if workflowDetail.status == '自动审核不通过' %}
+        <div class="alert alert-dismissable alert-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4>
+                {{ workflowDetail.status }}
+            </h4> <strong></strong>
+            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
+        </div>
+
+    {% elif workflowDetail.status == '等待审核人审核' %}
         {% if user.username in reviewMans %}
             <form action="/sqlreview/reject/" method="post" style="display:inline-block;">
                 {% csrf_token %}
@@ -153,18 +163,33 @@
 			<form action="/sqlreview/cancel/" method="post" style="display:inline-block;">
 				{% csrf_token %}
 				<input type="hidden" name="workflowid" value="{{workflowDetail.id}}">
-				<input type="submit" id="btnCancel" type="button" class="btn btn-warning" data-loading-text="Loading..." value="撤回工单" />
+				<input type="submit" id="btnCancel" type="button" class="btn btn-warning" data-loading-text="Loading..." value="撤回工单"
+                data-toggle="tooltip" data-placement="right" title="<h5>撤回修改,合适时再提交.</h5>"/>
 			</form>
         {% endif %}
+
+
+    {% elif workflowDetail.status == '发起人终止' %}
+        <div class="alert alert-dismissable alert-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h4>
+               {{ workflowDetail.status }}
+            </h4> <strong></strong>
+            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
+        </div>
+
 
     {% elif workflowDetail.status == '审核人驳回' %}
         <div class="alert alert-dismissable alert-warning">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             <h4>
-                驳回 !
+               {{ workflowDetail.status }}
             </h4> <strong>{{ notes.rejected_man }}：</strong> {{ workflowDetail.reject_opinion }}
             <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
         </div>
+
+
+
 
     {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == '是' %}
         <form action="/rollback/" method="get" style="display:inline-block;">
@@ -172,9 +197,8 @@
             <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
             <input type="submit" id="btnRollback" type="button" class="btn btn-default" data-loading-text="Loading..."
                    value="查看回滚SQL"/>
-        </form>
-    {% elif workflowDetail.status == '自动审核不通过' %}
-        <input type='button' class='btn btn-default' value='点此重新修改(其实是浏览器后退..)' onclick="history.back();"/>
+
+
     {% endif %}
 {% endblock content %}
 

@@ -381,6 +381,12 @@ def editsql(request, workflowId):
     workflowDetail = get_object_or_404(workflow, pk=workflowId)
     sqlContent = workflowDetail.sql_content.strip()
 
+    # 服务器端二次验证，如果正在执行终止动作的当前登录用户，不是发起人，则异常.
+    loginUser = request.session.get('login_username', False)
+    if loginUser is None or loginUser != workflowDetail.engineer:
+        context = {'errMsg': '当前登录用户不是发起人，请重新登录.'}
+        return render(request, 'sqlreview/error.html', context)
+
     # 获取所有在线集群信息
     clusters = getAllMySQLClusterInfo(flag='online')
     if len(clusters) == 0:
@@ -421,7 +427,7 @@ def editsql(request, workflowId):
                'dictAllClusterDb': dictAllClusterDb,
                'reviewMen': reviewMen,
                }
-    return render(request, 'sqlreview/editsql.html', context)
+    return render(request, 'sqlreview/submitsql.html', context)
 
 
 #获取当前时间

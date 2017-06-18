@@ -1,6 +1,20 @@
 $(document).ready(function (){
-  var status = $("#workflowDetail_status").text();
-  if (status=="等待审核人审核"){
+    //
+    $("#reject_modification").click(function () {
+        var loginUser = $("#loginUser").text().split('(')[0];
+        var engineer = $("#id_engineer").text();
+        if (loginUser != engineer) {
+            var msgbox = '当前登录用户不是发起人，请重新登录.';
+            $('#alert-modal-body').html(msgbox);
+            $('#alert-modal').modal({
+                keyboard: true
+            });
+            $(this).attr('href', '#');
+        }
+    });
+
+    var status = $("#workflowDetail_status").text();
+    if (status=="等待审核人审核"){
     setInterval("startRequest()",1000);
   }
 });

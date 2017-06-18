@@ -9,6 +9,7 @@
     <link href="{% static 'bootstrap-3.3.7-dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link href="{% static 'dist/css/bootstrap-select.css' %}" rel="stylesheet">
     <link href="{% static 'user/css/user1.css' %}" rel="stylesheet">
+    <link href="{% static 'user/css/base.css' %}" rel="stylesheet">
     {% block css %}
         <!--custom css-->
     {% endblock %}
@@ -38,7 +39,8 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="glyphicon glyphicon-user"></i><span id="loginUser" class="hidden-sm hidden-xs">{{ user.username }}({{ user.role }})</span>
+                                <i class="glyphicon glyphicon-user"></i><span
+                                    class="hidden-sm hidden-xs"> {{ user.username }}({{ user.role }})</span>
                                 <strong class="caret"></strong></a>
                             <ul class="dropdown-menu">
                                 <li><a href="/account/edit/{{ user.id }}/">我的信息 </a></li>
@@ -59,6 +61,7 @@
         <div class="col-md-2 column">
             <div class="list-group" id="accordion">
                 <!--menu-->
+
                 <a class="list-group-item" href="/"><span>&nbsp;<span
                         class="glyphicon glyphicon-home">平台首页</span></span></a>
 
@@ -79,9 +82,9 @@
                         {% for submenu in menu.submenus %}
 
                             {% if submenu.key == currentMenu %}
-                                <a href="{{ submenu.url }}" data-stopPropagation="true" class="list-group-item active"
+                                <a href="{{ submenu.url }}" class="list-group-item active"
                             {% else %}
-                                <a href="{{ submenu.url }}" data-stopPropagation="true" class="list-group-item"
+                                <a href="{{ submenu.url }}" class="list-group-item"
                             {% endif %}
 
                         ><span>&emsp;&nbsp;&nbsp;<span class="{{ submenu.class }}">{{ submenu.name }}</span></span>

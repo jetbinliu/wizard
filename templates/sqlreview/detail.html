@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+
 
 {% block content %}
     <h4>单子名称：{{ workflowDetail.workflow_name }}</h4>
@@ -31,9 +33,7 @@
         </thead>
         <tbody>
         <tr class="success">
-            <td>
-                {{ workflowDetail.engineer }}
-            </td>
+            <td id="id_engineer">{{ workflowDetail.engineer }}</td>
             <td>
                 {% for reviewMan in reviewMans %}
                     {{ reviewMan }}{% if not forloop.last %} {% endif %}
@@ -163,7 +163,7 @@
             <h4>
                 驳回 !
             </h4> <strong>{{ notes.rejected_man }}：</strong> {{ workflowDetail.reject_opinion }}
-            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" class="alert-link">请修改</a>
+            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
         </div>
 
     {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == '是' %}
@@ -177,3 +177,9 @@
         <input type='button' class='btn btn-default' value='点此重新修改(其实是浏览器后退..)' onclick="history.back();"/>
     {% endif %}
 {% endblock content %}
+
+
+{% block scripts %}
+    <!--custom scripts-->
+    <script src="{% static 'user/js/detail.js' %}"></script>
+{% endblock %}

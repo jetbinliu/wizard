@@ -66,10 +66,28 @@ $(document).ready(function () {
 		}
     });
 
-	// 鼠标离开副审核人区域后就折叠起来
+	// 鼠标离开副审核人区域后延时2秒后折叠起来
 	$("#collapse_sub_review_man").hover(function () {},
 	function () {
-		$(this).attr('class', "panel-collapse collapse");
+		var collapse_sub_review_man = $(this);
+		var promise = new Promise(function(resolve){
+  		resolve();
+		}).then(sleep(2000)).then(function(){
+  		collapse_sub_review_man.collapse('hide');
+		});
     });
 });
+
+function sleep(delay){
+  return function(){
+    return new Promise(function(resolve, reject){
+      setTimeout(resolve, delay);
+    });
+  }
+}
+
+
+
+
+
 

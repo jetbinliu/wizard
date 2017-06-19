@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="513c9625-dd47-4fb7-882a-8190f67e1046" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/common/context_processors.py" afterPath="$PROJECT_DIR$/common/context_processors.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/user/js/base.js" afterPath="$PROJECT_DIR$/static/user/js/base.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/bakconfig/mysql_backup.html" afterPath="$PROJECT_DIR$/templates/bakconfig/mysql_backup.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/sqlreview/submitsql.html" afterPath="$PROJECT_DIR$/templates/sqlreview/submitsql.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/user/js/submitsql.js" afterPath="$PROJECT_DIR$/static/user/js/submitsql.js" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -36,8 +33,8 @@
       <file leaf-file-name="base.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/user/js/base.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="35" column="12" lean-forward="false" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
+            <state relative-caret-position="357">
+              <caret line="21" column="34" lean-forward="false" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -95,7 +92,7 @@
       <file leaf-file-name="submitsql.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/sqlreview/submitsql.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
+            <state relative-caret-position="340">
               <caret line="62" column="66" lean-forward="false" selection-start-line="62" selection-start-column="66" selection-end-line="62" selection-end-column="66" />
               <folding />
             </state>
@@ -105,8 +102,8 @@
       <file leaf-file-name="submitsql.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/user/js/submitsql.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="65" column="9" lean-forward="false" selection-start-line="65" selection-start-column="9" selection-end-line="65" selection-end-column="9" />
+            <state relative-caret-position="295">
+              <caret line="68" column="23" lean-forward="false" selection-start-line="68" selection-start-column="23" selection-end-line="68" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -233,10 +230,10 @@
         <option value="$PROJECT_DIR$/bakconfig/views.py" />
         <option value="$PROJECT_DIR$/bakconfig/urls.py" />
         <option value="$PROJECT_DIR$/templates/base.html" />
-        <option value="$PROJECT_DIR$/static/user/js/base.js" />
         <option value="$PROJECT_DIR$/templates/bakconfig/mysql_backup.html" />
         <option value="$PROJECT_DIR$/common/context_processors.py" />
         <option value="$PROJECT_DIR$/templates/sqlreview/submitsql.html" />
+        <option value="$PROJECT_DIR$/static/user/js/base.js" />
         <option value="$PROJECT_DIR$/static/user/js/submitsql.js" />
       </list>
     </option>
@@ -1282,15 +1279,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/user/js/base.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="35" column="12" lean-forward="false" selection-start-line="35" selection-start-column="12" selection-end-line="35" selection-end-column="12" />
+        <state relative-caret-position="357">
+          <caret line="21" column="34" lean-forward="false" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/sqlreview/submitsql.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="340">
           <caret line="62" column="66" lean-forward="false" selection-start-line="62" selection-start-column="66" selection-end-line="62" selection-end-column="66" />
           <folding />
         </state>
@@ -1298,8 +1295,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/user/js/submitsql.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="65" column="9" lean-forward="false" selection-start-line="65" selection-start-column="9" selection-end-line="65" selection-end-column="9" />
+        <state relative-caret-position="295">
+          <caret line="68" column="23" lean-forward="false" selection-start-line="68" selection-start-column="23" selection-end-line="68" selection-end-column="23" />
           <folding />
         </state>
       </provider>

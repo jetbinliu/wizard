@@ -20,7 +20,6 @@ $(document).ready(function () {
         $(".submenu").each(function () {
             Id = $(this).attr('id');
             if (Id != currentId) {
-                // $(this).attr("class", "submenu panel-collapse collapse");
                 $(this).collapse('hide');
                 // 其它菜单折叠后修改"箭头"为向左
                 $(this).prev().children("span").last().attr("class", "glyphicon glyphicon-menu-left");

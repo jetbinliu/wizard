@@ -38,13 +38,6 @@ $(document).ready(function () {
     //     }
     // );
 
-    // $('.submenu a').on(("click", "[data-stopPropagation]", function (event) {
-    //     event.stopPropagation();
-    // });
-    // $(".submenu a[data-stopPropagation]").click(function (event) {
-    //     event.stopPropagation();
-    //     $(this).addClass('active');
-    // });
 
     $(".submenu a").click(function () {
         $.cookie("navstation", $(this).html(), {path: "/"});
@@ -60,4 +53,8 @@ $(document).ready(function () {
             }
         });
     }
+
+    $(".homePage").click(function () {
+        $.cookie("navstation", null, {path: "/"});
+    });
 });

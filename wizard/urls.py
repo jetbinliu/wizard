@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^common/', include('common.urls')),
     url(r'^sqlreview/', include('sqlreview.urls')),
     url(r'^dbconfig/', include('dbconfig.urls')),
+    url(r'^bakconfig/', include('bakconfig.urls')),
 ]

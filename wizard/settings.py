@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sqlreview',
     'dbconfig',
     'conf',
+    'bakconfig',
 ]
 
 MIDDLEWARE = [

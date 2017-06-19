@@ -16,9 +16,15 @@ leftMenuBtnsSuper = (
      'submenus': (
          {'name': '集群配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
      )},
-    {'name': '工单管理', 'url': '', 'class': 'glyphicon glyphicon-th-list',
+    {'name': '备份管理', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user',
      'submenus': (
-         {'name': 'SQL审核工单管理', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
+    {'name': 'MySQL备份', 'url': '/bakconfig/mysqlbackup/', 'class': 'glyphicon glyphicon-wrench'},
+    {'name': 'Redis备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
+    {'name': 'MongoDB备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
+     )},
+    {'name': '扩展', 'url': '', 'class': 'glyphicon glyphicon-th-list',
+     'submenus': (
+         {'name': '扩展', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
      )},
 )
 

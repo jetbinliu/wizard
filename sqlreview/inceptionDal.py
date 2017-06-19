@@ -73,6 +73,7 @@ class InceptionDao(object):
                   %s\
                   inception_magic_commit;" % (masterUser, masterPassword, masterHost, str(masterPort), sqlContent)
                 result = mdb(sql, self.inception_host, self.inception_port, '', '', '')
+        print("sqlautoReview", result)
         return result
 
     def executeFinal(self, workflowDetail, dictConn):
@@ -80,7 +81,7 @@ class InceptionDao(object):
         将sql交给inception进行最终执行，并返回执行结果。
         '''
         strBackup = ""
-        if workflowDetail.is_backup == '1':
+        if workflowDetail.is_backup == 1:
             strBackup = "--enable-remote-backup;"
         else:
             strBackup = "--disable-remote-backup;"
@@ -92,7 +93,8 @@ class InceptionDao(object):
              inception_magic_commit;" % (
         dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
         workflowDetail.sql_content)
-        splitResult = self._fetchall(sqlSplit, self.inception_host, self.inception_port, '', '', '')
+        splitResult = mdb(sqlSplit, self.inception_host, self.inception_port, '', '', '')
+        print("splitResult", splitResult)
 
         tmpList = []
         # 对于split好的结果，再次交给inception执行.这里无需保持在长连接里执行，短连接即可.
@@ -105,17 +107,18 @@ class InceptionDao(object):
             dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
             strBackup, sqlTmp)
 
-            executeResult = self._fetchall(sqlExecute, self.inception_host, self.inception_port, '', '', '')
+            executeResult = mdb(sqlExecute, self.inception_host, self.inception_port, '', '', '')
+            print("executeResult", executeResult)
             tmpList.append(executeResult)
 
         # 二次加工一下，目的是为了和sqlautoReview()函数的return保持格式一致，便于在detail页面渲染.
-        finalStatus = "已正常结束"
+        finalStatus = 8
         finalList = []
         for splitRow in tmpList:
             for sqlRow in splitRow:
                 # 如果发现任何一个行执行结果里有errLevel为1或2，并且stagestatus列没有包含Execute Successfully字样，则判断最终执行结果为有异常.
                 if (sqlRow[2] == 1 or sqlRow[2] == 2) and re.match(r"\w*Execute Successfully\w*", sqlRow[3]) is None:
-                    finalStatus = "执行有异常"
+                    finalStatus = 7
                 finalList.append(list(sqlRow))
 
         return (finalStatus, finalList)

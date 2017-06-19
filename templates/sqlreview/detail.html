@@ -189,17 +189,16 @@
         </div>
 
 
-
-
-    {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == '是' %}
-        <form action="/rollback/" method="get" style="display:inline-block;">
+    {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == 1 %}
+        <form action="/sqlreview/rollback/" method="get" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
             <input type="submit" id="btnRollback" type="button" class="btn btn-default" data-loading-text="Loading..."
                    value="查看回滚SQL"/>
 
-
     {% endif %}
+
+
 {% endblock content %}
 
 

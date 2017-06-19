@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^editsql/(?P<workflowId>[0-9]+)/$', views.editsql, name='sqlreview_editsql'),
 
     url(r'^execute/$', views.execute, name='sqlreview_execute'),
+    url(r'^rollbacksql/$', views.rollbacksql, name='sqlreview_rollbacksql'),
 ]

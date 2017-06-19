@@ -84,7 +84,7 @@ def allworkflow(request):
         context = {'errMsg': '传入的navStatus参数有误！'}
         return render(request, 'sqlreview/error.html', context)
 
-    context = {'currentMenu': 'allworkflow',
+    context = {
                'listWorkflow': listWorkflow,
                'WORKFLOW_STATUS': WORKFLOW_STATUS,
                'pageNo': pageNo,
@@ -243,11 +243,11 @@ def detail(request, workflowId):
         return render(request, 'sqlreview/error.html', context)
 
     listContent = None
-    if workflowDetail.status in (7, 8):
+    if workflowDetail.status in ('执行有异常', '已正常结束'):
         listContent = json.loads(workflowDetail.execute_result)
     else:
         listContent = json.loads(workflowDetail.review_content)
-    context = {'currentMenu': 'allworkflow',
+    context = {
                'workflowDetail': workflowDetail,
                'reviewMans': reviewMans,
                'listContent': listContent,
@@ -389,7 +389,7 @@ def editsql(request, workflowId):
        context = {'errMsg': '审核人为0, 请配置审核人。'}
        return render(request, 'sqlreview/error.html', context)
 
-    context = {'currentMenu': 'editsql',
+    context = {
                'workflowDetail': workflowDetail,
                'sqlContent': sqlContent,
                'dictAllClusterDb': dictAllClusterDb,
@@ -463,7 +463,21 @@ def execute(request):
             # 不发邮件
             pass
 
-    return HttpResponseRedirect('/detail/' + str(workflowId) + '/')
+    return HttpResponseRedirect('/sqlreview/detail/' + str(workflowId) + '/')
+
+
+#展示回滚的SQL
+def rollbacksql(request):
+    workflowId = request.GET['workflowid']
+    if workflowId == '' or workflowId is None:
+        context = {'errMsg': 'workflowId参数为空.'}
+        return render(request, 'sqlreview/error.html', context)
+    workflowId = int(workflowId)
+    listBackupSql = inceptionDao.getRollbackSqlList(workflowId)
+
+    context = {'listBackupSql':listBackupSql}
+    return render(request, 'rollbacksql.html', context)
+
 
 
 #获取当前时间

@@ -8,7 +8,7 @@ from .models import cluster_config as Cluster
 from common.aes_decryptor import Prpcrypt
 import pymysql as mdb
 
-
+prpCryptor = Prpcrypt()  # 初始化
 
 def getMySQLClusterDbs(host, port, user, passwd):
     dbs = []
@@ -51,8 +51,7 @@ def getAllMySQLClusterInfo(flag='online'):
     else:
         return None
     for cluster in clusters:
-        pc = Prpcrypt()  # 初始化
-        cluster.cluster_password = pc.decrypt(cluster.cluster_password)
+        cluster.cluster_password = prpCryptor.decrypt(cluster.cluster_password)
     return clusters
 
 

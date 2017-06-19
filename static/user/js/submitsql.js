@@ -65,5 +65,11 @@ $(document).ready(function () {
 			});
 		}
     });
+
+	// 鼠标离开副审核人区域后就折叠起来
+	$("#collapse_sub_review_man").hover(function () {},
+	function () {
+		$(this).attr('class', "panel-collapse collapse");
+    });
 });
 

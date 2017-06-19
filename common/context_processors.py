@@ -16,16 +16,6 @@ leftMenuBtnsSuper = (
      'submenus': (
          {'name': '集群配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
      )},
-    {'name': '备份管理', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user',
-     'submenus': (
-    {'name': 'MySQL备份', 'url': '/bakconfig/mysqlbackup/', 'class': 'glyphicon glyphicon-wrench'},
-    {'name': 'Redis备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
-    {'name': 'MongoDB备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
-     )},
-    {'name': '扩展', 'url': '', 'class': 'glyphicon glyphicon-th-list',
-     'submenus': (
-         {'name': '扩展', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
-     )},
 )
 
 leftMenuBtnsCommon = (
@@ -36,11 +26,21 @@ leftMenuBtnsCommon = (
         {'name': 'SQL审核必读', 'url': '/dbaprinciples/', 'class': 'glyphicon glyphicon-book'},
         {'name': '统计图表展示', 'url': '/charts/', 'class': 'glyphicon glyphicon-file'},
     )},
-     {'name':'日志管理', 'url':'', 'class':'glyphicon glyphicon-hdd', 'submenus':(
+    {'name': '备份管理', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user',
+     'submenus': (
+         {'name': 'MySQL备份', 'url': '/bakconfig/mysqlbackup/', 'class': 'glyphicon glyphicon-wrench'},
+         {'name': 'Redis备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
+         {'name': 'MongoDB备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
+     )},
+    {'name': '日志管理', 'url': '', 'class': 'glyphicon glyphicon-hdd', 'submenus': (
         {'name': '日你啊老赵', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
         {'name': '日你啊老王 ', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
         {'name': '日你啊李丁', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
     )},
+    {'name': '扩展', 'url': '', 'class': 'glyphicon glyphicon-th-list',
+     'submenus': (
+         {'name': '扩展', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
+     )},
 )
 
 leftMenuBtnsDoc = (

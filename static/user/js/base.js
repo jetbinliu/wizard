@@ -38,9 +38,9 @@ $(document).ready(function () {
     //     }
     // );
 
-
+    // 点击二级菜单后不关闭
     $(".submenu a").click(function () {
-        $.cookie("navstation", $(this).html(), {path: "/"});
+        $.cookie("navstation", $(this).html(), { path: "/" });
     });
 
     var navstation = $.cookie("navstation");
@@ -53,8 +53,8 @@ $(document).ready(function () {
             }
         });
     }
-
+    // 点击首页后关闭侧边栏
     $(".homePage").click(function () {
-        $.cookie("navstation", null, {path: "/"});
+        $.cookie("navstation", null, { path: "/" });
     });
 });

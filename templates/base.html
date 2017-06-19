@@ -63,29 +63,17 @@
                         class="glyphicon glyphicon-home">平台首页</span></span></a>
 
                 {% for menu in leftMenuBtns %}
-                    {% if menu.key == currentMenu %}
-                        <a class="menu list-group-item active" data-toggle="collapse" data-parent="#accordion"
-                            href="#collapse_{{ forloop.counter }}"
-                    {% else %}
-                        <a class="menu list-group-item" data-toggle="collapse" data-parent="#accordion"
-                            href="#collapse_{{ forloop.counter }}"
-                    {% endif %}
-                ><span>&nbsp;<span class="{{ menu.class }}">{{ menu.name }}</span></span>
-                    <span class="glyphicon glyphicon-menu-left" style="float: right"></span>
-                </a>
+                    <a class="menu list-group-item" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{ forloop.counter }}">
+                        <span>&nbsp;<span class="{{ menu.class }}">{{ menu.name }}</span></span>
+                        <span class="glyphicon glyphicon-menu-left" style="float: right"></span>
+                    </a>
 
                     <!--submenus-->
                     <div class="submenu collapse" id="collapse_{{ forloop.counter }}">
                         {% for submenu in menu.submenus %}
-
-                            {% if submenu.key == currentMenu %}
-                                <a href="{{ submenu.url }}" data-stopPropagation="true" class="list-group-item active"
-                            {% else %}
-                                <a href="{{ submenu.url }}" data-stopPropagation="true" class="list-group-item"
-                            {% endif %}
-
-                        ><span>&emsp;&nbsp;&nbsp;<span class="{{ submenu.class }}">{{ submenu.name }}</span></span>
-                        </a>
+                            <a href="{{ submenu.url }}" class="list-group-item">
+                                <span>&emsp;&nbsp;&nbsp;<span class="{{ submenu.class }}">{{ submenu.name }}</span></span>
+                            </a>
                         {% endfor %}
                     </div>
                 {% endfor %}

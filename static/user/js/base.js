@@ -54,6 +54,7 @@ $(document).ready(function () {
     if (navstation != null) {
         $(".submenu a").each(function () {
             if ($(this).html() == navstation) {
+                $(this).addClass('active');
                 $(this).parent().attr("class", "submenu collapse in");
                 $(this).parent().prev().children("span:last").attr("class", "glyphicon glyphicon-menu-down");
             }

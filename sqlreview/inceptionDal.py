@@ -99,6 +99,7 @@ class InceptionDao(object):
         tmpList = []
         # 对于split好的结果，再次交给inception执行.这里无需保持在长连接里执行，短连接即可.
         for splitRow in splitResult:
+            print(sqlSplit)
             sqlTmp = splitRow[1]
             sqlExecute = "/*--user=%s;--password=%s;--host=%s;--enable-execute;--port=%s; --enable-ignore-warnings;%s*/\
                     inception_magic_start;\
@@ -110,6 +111,7 @@ class InceptionDao(object):
             executeResult = mdb(sqlExecute, self.inception_host, self.inception_port, '', '', '')
             print("executeResult", executeResult)
             tmpList.append(executeResult)
+        print(tmpList)
 
         # 二次加工一下，目的是为了和sqlautoReview()函数的return保持格式一致，便于在detail页面渲染.
         finalStatus = 8
@@ -128,7 +130,7 @@ class InceptionDao(object):
         listExecuteResult = json.loads(workflowDetail.execute_result)
         listBackupSql = []
         for row in listExecuteResult:
-            # 获取backup_dbname
+            # 获取备份目标库名
             if row[8] == 'None':
                 continue;
             backupDbName = row[8]
@@ -136,14 +138,14 @@ class InceptionDao(object):
             opidTime = sequence.replace("'", "")
             sqlTable = "select tablename from %s.$_$Inception_backup_information$_$ where opid_time='%s';" % (
             backupDbName, opidTime)
-            listTables = self._fetchall(sqlTable, self.inception_remote_backup_host, self.inception_remote_backup_port,
+            listTables = mdb(sqlTable, self.inception_remote_backup_host, self.inception_remote_backup_port,
                                         self.inception_remote_backup_user, self.inception_remote_backup_password, '')
             if listTables is None or len(listTables) != 1:
                 print("Error: returned listTables more than 1.")
 
             tableName = listTables[0][0]
             sqlBack = "select rollback_statement from %s.%s where opid_time='%s'" % (backupDbName, tableName, opidTime)
-            listBackup = self._fetchall(sqlBack, self.inception_remote_backup_host, self.inception_remote_backup_port,
+            listBackup = mdb(sqlBack, self.inception_remote_backup_host, self.inception_remote_backup_port,
                                         self.inception_remote_backup_user, self.inception_remote_backup_password, '')
             if listBackup is not None and len(listBackup) != 0:
                 for rownum in range(len(listBackup)):

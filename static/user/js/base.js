@@ -47,7 +47,8 @@ $(document).ready(function () {
         $(".submenu a").each(function () {
             if ($(this).html() == navstation) {
                 $(this).addClass('active');
-                $(this).parent().attr("class", "submenu collapse in");
+                // $(this).parent().attr("class", "submenu collapse in");
+                $(this).parent().collapse('show');
                 $(this).parent().prev().children("span:last").attr("class", "glyphicon glyphicon-menu-down");
             }
         });

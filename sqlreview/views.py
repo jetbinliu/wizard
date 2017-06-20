@@ -4,6 +4,7 @@ import re
 import json
 import datetime
 
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -57,14 +58,13 @@ def allworkflow(request):
     listWorkflow = []
     # 查询全部流程
     loginUserOb = Users.objects.get(username=loginUser)
-    if navStatus == 'all' and loginUserOb.role <= 5:
+    if navStatus == 'all' and loginUserOb.role <= 3:
         # 这句话等同于select * from sql_workflow order by create_time desc limit {offset, limit};
-        listWorkflow = workflow.objects.exclude(status=2).order_by(
-            '-create_time')[offset:limit]
-    elif navStatus == 'all' and loginUserOb.role == '工程师':
+        listWorkflow = workflow.objects.order_by('-create_time')[offset:limit]
+        print(str(workflow.objects.order_by('-create_time')[offset:limit].query))
+    elif navStatus == 'all' and loginUserOb.role > 3:
         listWorkflow = workflow.objects.filter(
-            Q(engineer=loginUser) | Q(status=2), engineer=loginUser).order_by(
-            '-create_time')[offset:limit]
+            Q(engineer=loginUser) | Q(status=2), engineer=loginUser).order_by('-create_time')[offset:limit]
     elif navStatus == 'waitingforme':
         listWorkflow = workflow.objects.filter(status=3,
                                                review_man=loginUser).order_by('-create_time')[offset:limit]
@@ -247,12 +247,17 @@ def detail(request, workflowId):
         listContent = json.loads(workflowDetail.execute_result)
     else:
         listContent = json.loads(workflowDetail.review_content)
+
+    # 工单处于以下状态时允许修改工单
+    allowedToModify = ('自动审核不通过', '发起人终止', '审核人驳回', '执行有异常')
+
     context = {
-               'workflowDetail': workflowDetail,
-               'reviewMans': reviewMans,
-               'listContent': listContent,
-               'notes': notes,
-               }
+        'workflowDetail': workflowDetail,
+        'reviewMans': reviewMans,
+        'listContent': listContent,
+        'notes': notes,
+        'allowedToModify': allowedToModify,
+    }
     return render(request, 'sqlreview/detail.html', context)
 
 
@@ -473,10 +478,24 @@ def rollbacksql(request):
         context = {'errMsg': 'workflowId参数为空.'}
         return render(request, 'sqlreview/error.html', context)
     workflowId = int(workflowId)
+
+    # 根据workflowId去db里检索工单
+    workflowDetail = get_object_or_404(workflow, pk=workflowId)
+    reviewMans = json.loads(workflowDetail.review_man)
+    sqlContent = workflowDetail.sql_content.strip()
+
+    # 服务器端二次验证，如果正在查看工单详情的当前登录用户，不是发起人，也不属于审核人群，则异常.
+    loginUser = request.session.get('login_username', False)
+    authorizedGroups = [workflowDetail.engineer, "admin"]
+    authorizedGroups.extend(reviewMans)
+    if loginUser is None or loginUser not in authorizedGroups:
+        context = {'errMsg': '当前登录用户不是发起人，也不属于审核人群，请重新登录.'}
+        return render(request, 'sqlreview/error.html', context)
+
     listBackupSql = inceptionDao.getRollbackSqlList(workflowId)
 
-    context = {'listBackupSql':listBackupSql}
-    return render(request, 'rollbacksql.html', context)
+    context = {'sqlContent':sqlContent, 'listBackupSql':listBackupSql}
+    return render(request, 'sqlreview/rollbacksql.html', context)
 
 
 

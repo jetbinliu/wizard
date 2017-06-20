@@ -98,7 +98,11 @@
                     {{ row.5 }}
                 </td>
                 <td>
-                    {{ row.4 }}
+                    {% if row.4 == "None" %}
+                        OK
+                    {% else %}
+                        {{ row.4 }}
+                    {% endif %}
                 </td>
                 <td>
                     {{ row.6 }}
@@ -115,16 +119,8 @@
         </tbody>
     </table>
 
-    {% if workflowDetail.status == '自动审核不通过' %}
-        <div class="alert alert-dismissable alert-warning">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4>
-                {{ workflowDetail.status }}
-            </h4> <strong></strong>
-            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
-        </div>
 
-    {% elif workflowDetail.status == '等待审核人审核' %}
+    {% if workflowDetail.status == '等待审核人审核' %}
         {% if user.username in reviewMans %}
             <form action="/sqlreview/reject/" method="post" style="display:inline-block;">
                 {% csrf_token %}
@@ -169,17 +165,7 @@
         {% endif %}
 
 
-    {% elif workflowDetail.status == '发起人终止' %}
-        <div class="alert alert-dismissable alert-warning">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4>
-               {{ workflowDetail.status }}
-            </h4> <strong></strong>
-            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
-        </div>
-
-
-    {% elif workflowDetail.status == '审核人驳回' %}
+    {% elif workflowDetail.status in allowedToModify %}
         <div class="alert alert-dismissable alert-warning">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             <h4>
@@ -190,10 +176,10 @@
 
 
     {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == 1 %}
-        <form action="/sqlreview/rollback/" method="get" style="display:inline-block;">
+        <form action="/sqlreview/rollbacksql/" method="get" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
-            <input type="submit" id="btnRollback" type="button" class="btn btn-default" data-loading-text="Loading..."
+            <input type="submit" id="btnRollback" type="button" class="btn btn-success" data-loading-text="Loading..."
                    value="查看回滚SQL"/>
 
     {% endif %}

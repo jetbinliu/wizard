@@ -74,7 +74,7 @@
             <th>
                 SQL内容
             </th>
-            <th width="110px">
+            <th>
                 自动审核结果
             </th>
             <th width="110px">
@@ -95,14 +95,14 @@
                     {{ forloop.counter }}
                 </td>
                 <td>
-                    {{ row.5 }}
+                    {% for line in row.5 %}
+                        {{ line }}{% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
                 </td>
                 <td>
-                    {% if row.4 == "None" %}
-                        OK
-                    {% else %}
-                        {{ row.4 }}
-                    {% endif %}
+                    {% for line in row.4 %}
+                        {{ line }}{% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
                 </td>
                 <td>
                     {{ row.6 }}

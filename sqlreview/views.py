@@ -248,6 +248,13 @@ def detail(request, workflowId):
     else:
         listContent = json.loads(workflowDetail.review_content)
 
+    # 格式化detail界面sql语句和审核内容
+
+    for Content in listContent:
+        print(Content[5])
+        Content[4] = Content[4].split('\n')
+        Content[5] = Content[5].split('\r\n')
+
     # 工单处于以下状态时允许修改工单
     allowedToModify = ('自动审核不通过', '发起人终止', '审核人驳回', '执行有异常')
 
@@ -482,7 +489,8 @@ def rollbacksql(request):
     # 根据workflowId去db里检索工单
     workflowDetail = get_object_or_404(workflow, pk=workflowId)
     reviewMans = json.loads(workflowDetail.review_man)
-    sqlContent = workflowDetail.sql_content.strip()
+    _sqlContents = workflowDetail.sql_content.strip()
+    sqlContents = _sqlContents.split(';')
 
     # 服务器端二次验证，如果正在查看工单详情的当前登录用户，不是发起人，也不属于审核人群，则异常.
     loginUser = request.session.get('login_username', False)
@@ -494,7 +502,7 @@ def rollbacksql(request):
 
     listBackupSql = inceptionDao.getRollbackSqlList(workflowId)
 
-    context = {'sqlContent':sqlContent, 'listBackupSql':listBackupSql}
+    context = {'sqlContents':sqlContents, 'listBackupSql':listBackupSql}
     return render(request, 'sqlreview/rollbacksql.html', context)
 
 

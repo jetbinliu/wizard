@@ -52,11 +52,14 @@ function autoreview() {
 				var finalHtml = "";
 				for (var i=0; i<result.length; i++) {
 					//索引5是SQL，4是审核建议
+					var sql = result[i][5].replace(/\n/g,'<br>');
+					var suggest = result[i][4].replace(/\n/g,'<br>');
 					alertStyle = "alert-success";
 					if (result[i][4] != "None") {
 						alertStyle = "alert-danger";
 					}
-					finalHtml += "<div class='alert alert-dismissable " + alertStyle + "'> <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>x</button> <table class=''> <tr> <td width='800px'>" + result[i][5] + "</td> <td><strong>自动审核结果：</strong>" + result[i][4] + "</td> </tr> </table> </div>";
+					finalHtml += "<div class='alert alert-dismissable " + alertStyle + "'> <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>x</button> " +
+						"<table class=''> <tr> <td valign='top' width='600px'><strong>SQL语句：</strong><br/>" + sql + "</td> <td valign='top'><strong>自动审核结果：</strong><br/>" + suggest + "</td> </tr> </table> </div>";
 				}
 
 				$("#inception-result-col").html(finalHtml);

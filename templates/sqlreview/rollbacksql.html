@@ -20,13 +20,15 @@
 			<hr>
 			<table class="table table-striped table-hover">
 				<tbody>
-                    {% for sql in listBackupSql %}
+
 					<tr>
 						<td>
-							{{sql}}
+                            {% for sql in listBackupSql %}
+							    {{sql}}{% if not forloop.last %}</br>{% endif %}
+                            {% endfor %}
 						</td>
 					</tr>
-					{% endfor %}
+
 				</tbody>
 			</table>
 {% endblock content%}

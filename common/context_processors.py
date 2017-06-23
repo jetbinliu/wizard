@@ -28,7 +28,7 @@ leftMenuBtnsCommon = (
     )},
     {'name': '备份管理', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user',
      'submenus': (
-         {'name': 'MySQL备份', 'url': '/bakconfig/mysqlbackup/', 'class': 'glyphicon glyphicon-wrench',},
+         {'name': 'MySQL备份', 'url': '/bakconfig/mysqlbackup/', 'class': 'glyphicon glyphicon-wrench'},
          {'name': 'Redis备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
          {'name': 'MongoDB备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
      )},

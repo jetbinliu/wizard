@@ -73,7 +73,6 @@ class InceptionDao(object):
                   %s\
                   inception_magic_commit;" % (masterUser, masterPassword, masterHost, str(masterPort), sqlContent)
                 result = mdb(sql, self.inception_host, self.inception_port, '', '', '')
-        print("sqlautoReview", result)
         return result
 
     def executeFinal(self, workflowDetail, dictConn):
@@ -94,12 +93,10 @@ class InceptionDao(object):
         dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
         workflowDetail.sql_content)
         splitResult = mdb(sqlSplit, self.inception_host, self.inception_port, '', '', '')
-        print("splitResult", splitResult)
 
         tmpList = []
         # 对于split好的结果，再次交给inception执行.这里无需保持在长连接里执行，短连接即可.
         for splitRow in splitResult:
-            print(sqlSplit)
             sqlTmp = splitRow[1]
             sqlExecute = "/*--user=%s;--password=%s;--host=%s;--enable-execute;--port=%s; --enable-ignore-warnings;%s*/\
                     inception_magic_start;\
@@ -109,9 +106,7 @@ class InceptionDao(object):
             strBackup, sqlTmp)
 
             executeResult = mdb(sqlExecute, self.inception_host, self.inception_port, '', '', '')
-            print("executeResult", executeResult)
             tmpList.append(executeResult)
-        print(tmpList)
 
         # 二次加工一下，目的是为了和sqlautoReview()函数的return保持格式一致，便于在detail页面渲染.
         finalStatus = 8

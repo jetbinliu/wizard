@@ -248,12 +248,10 @@ def detail(request, workflowId):
     else:
         listContent = json.loads(workflowDetail.review_content)
 
-    # 格式化detail界面sql语句和审核内容
-
+    # 格式化detail界面sql语句和审核/执行结果
     for Content in listContent:
-        print(Content[5])
-        Content[4] = Content[4].split('\n')
-        Content[5] = Content[5].split('\r\n')
+        Content[4] = Content[4].split('\n')     # 审核/执行结果
+        Content[5] = Content[5].split('\r\n')   # sql语句
 
     # 工单处于以下状态时允许修改工单
     allowedToModify = ('自动审核不通过', '发起人终止', '审核人驳回', '执行有异常')

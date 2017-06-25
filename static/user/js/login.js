@@ -27,10 +27,10 @@ function authenticateUser() {
         },
         success: function (data) {
 			if (data.status == 0) {
-				$(location).attr('href','/allworkflow/');
+				$(location).attr('href', '/');
 			} else {
-				$('#wrongpwd-modal-body').html(data.msg);
-				$('#wrongpwd-modal').modal({
+				$('#alert-modal-body').html(data.msg);
+				$('#alert-modal').modal({
         			keyboard: true
     			});
 			}

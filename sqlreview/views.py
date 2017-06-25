@@ -13,6 +13,7 @@ from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLClusterInfo, get
 from .inceptionDal import InceptionDao
 from .models import workflow, WORKFLOW_STATUS
 from lib.configgetter import Configuration
+from lib.util import getNow, _getDetailUrl
 
 conf = Configuration("conf/global.conf")
 inceptionDao = InceptionDao()
@@ -503,15 +504,3 @@ def rollbacksql(request):
     context = {'sqlContents':sqlContents, 'listBackupSql':listBackupSql}
     return render(request, 'sqlreview/rollbacksql.html', context)
 
-
-
-#获取当前时间
-def getNow():
-    NOW = datetime.datetime.now()
-    return datetime.datetime.strftime(NOW, "%Y-%m-%d %H:%M:%S")
-
-#获取当前请求url
-def _getDetailUrl(request):
-    scheme = request.scheme
-    host = request.META['HTTP_HOST']
-    return "%s://%s/detail/" % (scheme, host)

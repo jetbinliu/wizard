@@ -41,11 +41,11 @@
                         <td>{{ cluster.cluster_host }}</td>
                         <td>{{ cluster.cluster_port }}</td>
                         <td>{{ cluster.update_time |date:"Y-m-d H:i:s" }}</td>
-                        <td>
+                        <td class="clusterStatSet">
                             {% if cluster.cluster_status == 1 %}
-				    	        <div class="switchon" id="clusterid_{{cluster.cluster_port}}" value="1" onclick="clusterStatSet('{{cluster.cluster_port}}')" title="点击关闭" ></div>
+				    	        <div class="switchon" id="clusterid_{{cluster.cluster_port}}" value="1" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_port}}')" title="点击关闭" ></div>
 				            {% else %}
-				    	        <div class="switchoff" id="clusterid_{{cluster.cluster_port}}" value="0" onclick="clusterStatSet('{{cluster.cluster_port}}')" title="点击开启" ></div>
+				    	        <div class="switchoff" id="clusterid_{{cluster.cluster_port}}" value="0" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_port}}')" title="点击开启" ></div>
 				            {% endif %}
                         </td>
                         <td class="center ">
@@ -107,7 +107,7 @@
     <script src="{% static 'user/js/dbconfig.js' %}"></script>
 
     <script type="text/javascript">
-    sessionStorage.hide_history_url = window.location.pathname;
+    sessionStorage.setItem('hide_history_url', window.location.pathname);
     </script>
 
 {% endblock %}

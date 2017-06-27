@@ -4,7 +4,7 @@ import json
 
 from django.db.models import Q
 
-from .models import mysql_cluster_config as Cluster
+from .models import mysql_cluster_config, redis_cluster_config, mongodb_cluster_config
 from common.aes_decryptor import Prpcrypt
 import pymysql as mdb
 
@@ -68,9 +68,19 @@ def getMasterConnStr(clusterName):
     return dictConn
 
 
-def setClusterStatusByPort(port,stat):
+def setClusterStatusByPort(cluster_type,port,stat):
+    _cluster_type = cluster_type.lower()
+    if _cluster_type == 'mysql':
+        _dao = mysql_cluster_config
+    elif _cluster_type == 'redis':
+        _dao = redis_cluster_config
+    elif _cluster_type == 'mongodb':
+        _dao = mongodb_cluster_config
+    else:
+        return HttpResponse(status=403)
+
     try:
-        Cluster.objects.filter(cluster_port=int(port)).update(cluster_status=int(stat))
+        _dao.objects.filter(cluster_port=int(port)).update(cluster_status=int(stat))
         return {'status': 0}
     except Exception as e:
         print(e)

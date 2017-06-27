@@ -117,6 +117,7 @@ def edit(request, cluster_id):
     context = {'cluster':cluster, 'CLUSTER_ROLE':CLUSTER_ROLE, 'CLUSTER_STATUS':CLUSTER_STATUS}
     return render(request, 'dbconfig/edit.html', context)
 
+
 def detail(request, cluster_id):
     HTTP_REFERER = request.META.get("HTTP_REFERER")
     cluster_type = re.split(r'\W+', HTTP_REFERER)[-3]
@@ -138,6 +139,7 @@ def detail(request, cluster_id):
 
     context = {'cluster':cluster}
     return render(request, 'dbconfig/detail.html', context)
+
 
 def delete(request, cluster_id):
     HTTP_REFERER = request.META.get("HTTP_REFERER")
@@ -163,7 +165,8 @@ def delete(request, cluster_id):
 
 @csrf_exempt
 def setclusterstatus(request):
+    cluster_type = request.POST.get("cluster_type")
     port = request.POST.get("port")
     stat = request.POST.get("stat")
-    rets = setClusterStatusByPort(port,stat)
+    rets = setClusterStatusByPort(cluster_type,port,stat)
     return HttpResponse(json.dumps(rets), content_type='application/json')

@@ -4,7 +4,7 @@ import json
 
 from django.db.models import Q
 
-from .models import cluster_config as Cluster
+from .models import mysql_cluster_config as Cluster
 from common.aes_decryptor import Prpcrypt
 import pymysql as mdb
 

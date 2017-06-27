@@ -14,7 +14,9 @@ leftMenuBtnsSuper = (
     )},
     {'name': '数据库管理', 'url': '', 'class': 'glyphicon glyphicon-oil',
      'submenus': (
-         {'name': '集群配置', 'url': '/dbconfig/index/', 'class': 'glyphicon glyphicon-user'},
+         {'name': 'MySQL集群', 'url': '/dbconfig/MySQL-Cluster/', 'class': 'glyphicon glyphicon-user'},
+         {'name': 'Redis集群', 'url': '/dbconfig/Redis-Cluster/', 'class': 'glyphicon glyphicon-user'},
+         {'name': 'MongoDB集群', 'url': '/dbconfig/MongoDB-Cluster/', 'class': 'glyphicon glyphicon-user'},
      )},
 )
 

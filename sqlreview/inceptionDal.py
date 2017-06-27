@@ -6,7 +6,7 @@ import MySQLdb
 
 
 from .models import workflow
-from dbconfig.models import cluster_config
+from dbconfig.models import mysql_cluster_config
 from common.aes_decryptor import Prpcrypt
 from lib.configgetter import Configuration
 from lib.mysqllib import mdb

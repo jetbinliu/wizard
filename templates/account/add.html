@@ -56,8 +56,7 @@
                 <br>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">保存</button>
-                    <!--<button class="btn" onclick="return httpRedirectAjax('{% url 'account_index' %}')">取消</button>-->
-                    <button class="btn" onclick="location.reload([bForceGet])">取消</button>
+                    <input type='button' class='btn btn-default' value='取消' onclick="normalRedirect();" />
                 </div>
             </fieldset>
         </form>

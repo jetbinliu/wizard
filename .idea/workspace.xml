@@ -2,25 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="513c9625-dd47-4fb7-882a-8190f67e1046" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/error.html" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/templates/account/login1.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/account/views_ajax.py" afterPath="$PROJECT_DIR$/account/views_ajax.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbconfig/dbconfigDal.py" afterPath="$PROJECT_DIR$/dbconfig/dbconfigDal.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbconfig/models.py" afterPath="$PROJECT_DIR$/dbconfig/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbconfig/urls.py" afterPath="$PROJECT_DIR$/dbconfig/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dbconfig/views.py" afterPath="$PROJECT_DIR$/dbconfig/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlreview/inceptionDal.py" afterPath="$PROJECT_DIR$/sqlreview/inceptionDal.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/user/js/common_ajax.js" afterPath="$PROJECT_DIR$/static/user/js/common_ajax.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sqlreview/views.py" afterPath="$PROJECT_DIR$/sqlreview/views.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/user/js/dbconfig.js" afterPath="$PROJECT_DIR$/static/user/js/dbconfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/account/add.html" afterPath="$PROJECT_DIR$/templates/account/add.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/account/edit.html" afterPath="$PROJECT_DIR$/templates/account/edit.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/dbconfig/add.html" afterPath="$PROJECT_DIR$/templates/dbconfig/add.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/dbconfig/detail.html" afterPath="$PROJECT_DIR$/templates/dbconfig/detail.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/dbconfig/edit.html" afterPath="$PROJECT_DIR$/templates/dbconfig/edit.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/dbconfig/index.html" afterPath="$PROJECT_DIR$/templates/dbconfig/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/sqlreview/allworkflow.html" afterPath="$PROJECT_DIR$/templates/sqlreview/allworkflow.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/templates/sqlreview/detail.html" afterPath="$PROJECT_DIR$/templates/sqlreview/detail.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -47,22 +35,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="add.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/dbconfig/add.html">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sqlreview/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="671">
-              <caret line="61" column="62" lean-forward="true" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="context_processors.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/context_processors.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="16" column="52" lean-forward="true" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
-              <folding />
+            <state relative-caret-position="576">
+              <caret line="256" column="56" lean-forward="false" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
+              <folding>
+                <element signature="e#25#34#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -70,9 +50,11 @@
       <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dbconfig/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="9" column="86" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="86" />
-              <folding />
+            <state relative-caret-position="694">
+              <caret line="174" column="66" lean-forward="false" selection-start-line="174" selection-start-column="66" selection-end-line="174" selection-end-column="66" />
+              <folding>
+                <element signature="e#24#35#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -80,11 +62,52 @@
       <file leaf-file-name="dbconfigDal.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dbconfig/dbconfigDal.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1118">
-              <caret line="6" column="86" lean-forward="false" selection-start-line="6" selection-start-column="86" selection-end-line="6" selection-end-column="86" />
+            <state relative-caret-position="625">
+              <caret line="82" column="110" lean-forward="false" selection-start-line="82" selection-start-column="110" selection-end-line="82" selection-end-column="110" />
               <folding>
-                <marker date="1498574858671" expanded="true" signature="826:960" ph="select schem... schemata" />
+                <element signature="e#25#36#0" expanded="true" />
+                <marker date="1498714378244" expanded="true" signature="826:960" ph="select schem... schemata" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/dbconfig/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-457">
+              <caret line="47" column="118" lean-forward="false" selection-start-line="47" selection-start-column="118" selection-end-line="47" selection-end-column="118" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dbconfig.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/static/user/js/dbconfig.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="697">
+              <caret line="70" column="62" lean-forward="true" selection-start-line="70" selection-start-column="62" selection-end-line="70" selection-end-column="62" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common_ajax.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/user/js/common_ajax.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="705">
+              <caret line="95" column="21" lean-forward="false" selection-start-line="95" selection-start-column="21" selection-end-line="95" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="detail.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/user/js/detail.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-391">
+              <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -92,21 +115,9 @@
       <file leaf-file-name="global.conf" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/conf/global.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="580">
-              <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="667">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dbconfig/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" column="40" lean-forward="false" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="40" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -114,39 +125,22 @@
       <file leaf-file-name="detail.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/sqlreview/detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="139" column="52" lean-forward="true" selection-start-line="139" selection-start-column="52" selection-end-line="139" selection-end-column="52" />
+            <state relative-caret-position="373">
+              <caret line="126" column="31" lean-forward="false" selection-start-line="126" selection-start-column="29" selection-end-line="126" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/dbconfig/index.html">
+      <file leaf-file-name="inceptionDal.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sqlreview/inceptionDal.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="47" column="147" lean-forward="false" selection-start-line="47" selection-start-column="147" selection-end-line="47" selection-end-column="147" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dbconfig.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/static/user/js/dbconfig.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="58" column="40" lean-forward="false" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="edit.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/dbconfig/edit.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="42" column="46" lean-forward="false" selection-start-line="42" selection-start-column="46" selection-end-line="42" selection-end-column="46" />
-              <folding />
+            <state relative-caret-position="119">
+              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <folding>
+                <marker date="1498642049621" expanded="true" signature="5616:5696" ph="select table... $_$Inception_backup_information$_$" />
+                <marker date="1498642049621" expanded="true" signature="6155:6212" ph="select rollb... missing_value" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -166,16 +160,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>workflowStatus</find>
-      <find>workflow_id</find>
-      <find>workflowid</find>
-      <find>engineer</find>
-      <find>objEngineer</find>
-      <find>getMasterConnStr</find>
-      <find>men</find>
-      <find>workflowDetail</find>
       <find>sql_content</find>
-      <find>print</find>
       <find>sidebar</find>
       <find>login-form</find>
       <find>login-form-style</find>
@@ -196,6 +181,15 @@
       <find>validateCallback</find>
       <find>httpRedirect</find>
       <find>cluster_type</find>
+      <find>hi</find>
+      <find>cluster_names</find>
+      <find>alertStyle</find>
+      <find>print</find>
+      <find>getMySQLClusterDbs</find>
+      <find>setClusterStatusByHostPortPort</find>
+      <find>hosts</find>
+      <find>getAllMySQLClusterInfo</find>
+      <find>false</find>
     </findStrings>
     <replaceStrings>
       <replace>cluster</replace>
@@ -243,13 +237,11 @@
         <option value="$PROJECT_DIR$/templates/account/login.html" />
         <option value="$PROJECT_DIR$/static/user/js/login.js" />
         <option value="$PROJECT_DIR$/lib/util.py" />
-        <option value="$PROJECT_DIR$/sqlreview/views.py" />
         <option value="$PROJECT_DIR$/static/user/js/user1.js" />
         <option value="$PROJECT_DIR$/static/user/js/base.js" />
         <option value="$PROJECT_DIR$/static/user/js/detail.js" />
         <option value="$PROJECT_DIR$/account/views_ajax.py" />
         <option value="$PROJECT_DIR$/templates/sqlreview/allworkflow.html" />
-        <option value="$PROJECT_DIR$/sqlreview/inceptionDal.py" />
         <option value="$PROJECT_DIR$/dbconfig/urls.py" />
         <option value="$PROJECT_DIR$/templates/account/add.html" />
         <option value="$PROJECT_DIR$/templates/account/edit.html" />
@@ -259,12 +251,14 @@
         <option value="$PROJECT_DIR$/static/user/js/common_ajax.js" />
         <option value="$PROJECT_DIR$/templates/sqlreview/detail.html" />
         <option value="$PROJECT_DIR$/templates/dbconfig/add.html" />
-        <option value="$PROJECT_DIR$/templates/dbconfig/edit.html" />
         <option value="$PROJECT_DIR$/common/context_processors.py" />
-        <option value="$PROJECT_DIR$/static/user/js/dbconfig.js" />
+        <option value="$PROJECT_DIR$/templates/dbconfig/edit.html" />
+        <option value="$PROJECT_DIR$/sqlreview/inceptionDal.py" />
+        <option value="$PROJECT_DIR$/sqlreview/views.py" />
+        <option value="$PROJECT_DIR$/templates/dbconfig/index.html" />
         <option value="$PROJECT_DIR$/dbconfig/views.py" />
         <option value="$PROJECT_DIR$/dbconfig/dbconfigDal.py" />
-        <option value="$PROJECT_DIR$/templates/dbconfig/index.html" />
+        <option value="$PROJECT_DIR$/static/user/js/dbconfig.js" />
       </list>
     </option>
   </component>
@@ -1020,14 +1014,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/user/js/autoreview.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="61" column="72" lean-forward="false" selection-start-line="61" selection-start-column="72" selection-end-line="61" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/account/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -1114,14 +1100,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/user/js/detail.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-187">
-          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/user/js/base.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="773">
@@ -1143,39 +1121,6 @@
         <state relative-caret-position="698">
           <caret line="60" column="0" lean-forward="false" selection-start-line="60" selection-start-column="0" selection-end-line="62" selection-end-column="77" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sqlreview/sqlreviewDal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-          <folding>
-            <marker date="1497411140381" expanded="true" signature="153:334" ph="select date_... sql_workflow" />
-            <marker date="1497411140381" expanded="true" signature="508:655" ph="select engin... sql_workflow" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sqlreview/inceptionDal.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="0" lean-forward="true" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
-          <folding>
-            <element signature="e#23#32#0" expanded="true" />
-            <marker date="1498376919074" expanded="true" signature="5572:5652" ph="select table... $_$Inception_backup_information$_$" />
-            <marker date="1498376919074" expanded="true" signature="6111:6168" ph="select rollb... missing_value" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sqlreview/views_ajax.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="32" lean-forward="false" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
-          <folding>
-            <element signature="e#25#36#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1219,16 +1164,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sqlreview/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="84" column="0" lean-forward="false" selection-start-line="84" selection-start-column="0" selection-end-line="85" selection-end-column="63" />
-          <folding>
-            <element signature="e#25#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="492">
@@ -1237,42 +1172,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/dbconfig/detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/user/js/common_ajax.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="95" column="21" lean-forward="false" selection-start-line="95" selection-start-column="21" selection-end-line="95" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/dbconfig/add.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="671">
-          <caret line="61" column="62" lean-forward="true" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="62" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/dbconfig/edit.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="42" column="46" lean-forward="false" selection-start-line="42" selection-start-column="46" selection-end-line="42" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/sqlreview/submitsql.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-851">
-          <caret line="9" column="87" lean-forward="false" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="87" />
+          <caret line="61" column="62" lean-forward="false" selection-start-line="61" selection-start-column="4" selection-end-line="61" selection-end-column="62" />
           <folding />
         </state>
       </provider>
@@ -1281,22 +1184,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1344">
           <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="35" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/sqlreview/detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="139" column="52" lean-forward="true" selection-start-line="139" selection-start-column="52" selection-end-line="139" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/conf/global.conf">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1314,41 +1201,148 @@
     <entry file="file://$PROJECT_DIR$/common/context_processors.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
-          <caret line="16" column="52" lean-forward="true" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
+          <caret line="16" column="52" lean-forward="false" selection-start-line="16" selection-start-column="52" selection-end-line="16" selection-end-column="52" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/user/js/dbconfig.js">
+    <entry file="file://$PROJECT_DIR$/templates/dbconfig/detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="58" column="40" lean-forward="false" selection-start-line="58" selection-start-column="40" selection-end-line="58" selection-end-column="40" />
+        <state relative-caret-position="391">
+          <caret line="23" column="46" lean-forward="false" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dbconfig/views.py">
+    <entry file="file://$PROJECT_DIR$/static/user/js/autoreview.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="9" column="86" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="86" />
+        <state relative-caret-position="355">
+          <caret line="49" column="41" lean-forward="true" selection-start-line="49" selection-start-column="41" selection-end-line="49" selection-end-column="41" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dbconfig/dbconfigDal.py">
+    <entry file="file://$PROJECT_DIR$/templates/dbconfig/edit.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1118">
-          <caret line="6" column="86" lean-forward="false" selection-start-line="6" selection-start-column="86" selection-end-line="6" selection-end-column="86" />
+        <state relative-caret-position="204">
+          <caret line="12" column="81" lean-forward="true" selection-start-line="12" selection-start-column="81" selection-end-line="12" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sqlreview/views_ajax.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="41" column="32" lean-forward="false" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sqlreview/sqlreviewDal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
-            <marker date="1498574858671" expanded="true" signature="826:960" ph="select schem... schemata" />
+            <marker date="1497411140381" expanded="true" signature="153:334" ph="select date_... sql_workflow" />
+            <marker date="1497411140381" expanded="true" signature="508:655" ph="select engin... sql_workflow" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/sqlreview/submitsql.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-35">
+          <caret line="9" column="87" lean-forward="false" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/global.conf">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="667">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sqlreview/inceptionDal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding>
+            <marker date="1498642049621" expanded="true" signature="5616:5696" ph="select table... $_$Inception_backup_information$_$" />
+            <marker date="1498642049621" expanded="true" signature="6155:6212" ph="select rollb... missing_value" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/sqlreview/detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="126" column="31" lean-forward="false" selection-start-line="126" selection-start-column="29" selection-end-line="126" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/user/js/detail.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-391">
+          <caret line="1" column="17" lean-forward="false" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sqlreview/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="256" column="56" lean-forward="false" selection-start-line="256" selection-start-column="56" selection-end-line="256" selection-end-column="56" />
+          <folding>
+            <element signature="e#25#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/dbconfig/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="47" column="147" lean-forward="false" selection-start-line="47" selection-start-column="147" selection-end-line="47" selection-end-column="147" />
+        <state relative-caret-position="-457">
+          <caret line="47" column="118" lean-forward="false" selection-start-line="47" selection-start-column="118" selection-end-line="47" selection-end-column="118" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/user/js/common_ajax.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="95" column="21" lean-forward="false" selection-start-line="95" selection-start-column="21" selection-end-line="95" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dbconfig/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="694">
+          <caret line="174" column="66" lean-forward="false" selection-start-line="174" selection-start-column="66" selection-end-line="174" selection-end-column="66" />
+          <folding>
+            <element signature="e#24#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dbconfig/dbconfigDal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="82" column="110" lean-forward="false" selection-start-line="82" selection-start-column="110" selection-end-line="82" selection-end-column="110" />
+          <folding>
+            <element signature="e#25#36#0" expanded="true" />
+            <marker date="1498714378244" expanded="true" signature="826:960" ph="select schem... schemata" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/user/js/dbconfig.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="697">
+          <caret line="70" column="62" lean-forward="true" selection-start-line="70" selection-start-column="62" selection-end-line="70" selection-end-column="62" />
           <folding />
         </state>
       </provider>

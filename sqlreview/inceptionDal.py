@@ -4,6 +4,7 @@ import re
 import json
 import MySQLdb
 
+from django.db.models import Q
 
 from .models import workflow
 from dbconfig.models import mysql_cluster_config
@@ -47,10 +48,10 @@ class InceptionDao(object):
         '''
         将sql交给inception进行自动审核，并返回审核结果。
         '''
-        listMasters = cluster_config.objects.filter(cluster_name=clusterName)
+        listMasters = mysql_cluster_config.objects.filter(Q(cluster_name=clusterName) & Q(cluster_role=1))
         if len(listMasters) != 1:
             print("Error: 集群配置返回为0")
-        masterHost = json.loads(listMasters[0].cluster_hosts)[0]
+        masterHost = listMasters[0].cluster_host
         masterPort = listMasters[0].cluster_port
         masterUser = listMasters[0].cluster_user
         masterPassword = self.prpCryptor.decrypt(listMasters[0].cluster_password)

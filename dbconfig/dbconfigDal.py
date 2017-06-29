@@ -41,13 +41,13 @@ def getAllMySQLClusterInfo(flag='online'):
 
     # 查询在线集群信息
     if flag == 'online':
-        clusters = Cluster.objects.filter(Q(cluster_type=1) and Q(cluster_status=1))
+        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=1) & Q(cluster_status=1))
     # 查询在线集群信息
     elif flag == 'offline':
-        clusters = Cluster.objects.filter(Q(cluster_type=1) and Q(cluster_status=0))
+        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=1) & Q(cluster_status=0))
     # 查询全部集群信息
     elif flag == 'all':
-        clusters = Cluster.objects.filter(cluster_type=1)
+        clusters = mysql_cluster_config.objects.filter(cluster_role=1)
     else:
         return None
     for cluster in clusters:
@@ -57,9 +57,9 @@ def getAllMySQLClusterInfo(flag='online'):
 
 # 根据集群名获取主库连接字符串，并封装成一个dict
 def getMasterConnStr(clusterName):
-    listMasters = Cluster.objects.filter(cluster_name=clusterName)
+    listMasters = mysql_cluster_config.objects.filter(Q(cluster_name=clusterName) & Q(cluster_role=1))
 
-    masterHost = json.loads(listMasters[0].cluster_hosts)[0]
+    masterHost = listMasters[0].cluster_host
     masterPort = listMasters[0].cluster_port
     masterUser = listMasters[0].cluster_user
     masterPassword = prpCryptor.decrypt(listMasters[0].cluster_password)
@@ -68,7 +68,7 @@ def getMasterConnStr(clusterName):
     return dictConn
 
 
-def setClusterStatusByPort(cluster_type,port,stat):
+def setClusterStatusByHostPort(cluster_type,host,port,stat):
     _cluster_type = cluster_type.lower()
     if _cluster_type == 'mysql':
         _dao = mysql_cluster_config
@@ -80,7 +80,7 @@ def setClusterStatusByPort(cluster_type,port,stat):
         return HttpResponse(status=403)
 
     try:
-        _dao.objects.filter(cluster_port=int(port)).update(cluster_status=int(stat))
+        _dao.objects.filter(Q(cluster_host=host) & Q(cluster_port=int(port))).update(cluster_status=int(stat))
         return {'status': 0}
     except Exception as e:
         print(e)

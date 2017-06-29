@@ -10,6 +10,8 @@
         <form class="form-horizontal" method="post" action="{% url 'dbconfig_edit' cluster.id %}">
             {% csrf_token %}
             <fieldset>
+                <input type="hidden" name="cluster_id" value="{{ cluster.id }}"/>
+
                 <div class="control-group">
                     <label class="control-label">集群名称<span style="color:#f00">*</span></label>
                     <input class="input-xlarge" type="text" name="cluster_name" value="{{ cluster.cluster_name }}" required/>

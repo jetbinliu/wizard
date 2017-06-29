@@ -43,9 +43,9 @@
                         <td>{{ cluster.update_time |date:"Y-m-d H:i:s" }}</td>
                         <td class="clusterStatSet">
                             {% if cluster.cluster_status == 1 %}
-				    	        <div class="switchon" id="clusterid_{{cluster.cluster_port}}" value="1" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_port}}')" title="点击关闭" ></div>
+				    	        <div class="switchon" id="clusterid_{{cluster.cluster_host}}_{{cluster.cluster_port}}" cluster_type="" value="1" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_host}}', '{{cluster.cluster_port}}')" title="点击关闭" ></div>
 				            {% else %}
-				    	        <div class="switchoff" id="clusterid_{{cluster.cluster_port}}" value="0" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_port}}')" title="点击开启" ></div>
+				    	        <div class="switchoff" id="clusterid_{{cluster.cluster_host}}_{{cluster.cluster_port}}" cluster_type="" value="0" onclick="clusterStatSet('{{cluster_type}}', '{{cluster.cluster_host}}', '{{cluster.cluster_port}}')" title="点击开启" ></div>
 				            {% endif %}
                         </td>
                         <td class="center ">
@@ -108,6 +108,10 @@
 
     <script type="text/javascript">
     sessionStorage.setItem('hide_history_url', window.location.pathname);
+    var cluster_type = sessionStorage.getItem('hide_history_url').split(/\W+/)[2];
+    $(".clusterStatSet div").each(function () {
+        $(this).attr('cluster_type', cluster_type);
+    });
     </script>
 
 {% endblock %}

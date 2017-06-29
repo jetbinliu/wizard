@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.db.models import Q
 
 from .models import mysql_cluster_config, redis_cluster_config, mongodb_cluster_config, CLUSTER_ROLE, CLUSTER_STATUS
-from .dbconfigDal import setClusterStatusByPort
+from .dbconfigDal import setClusterStatusByHostPort
 from common.aes_decryptor import Prpcrypt
 
 # Create your views here.
@@ -56,8 +56,8 @@ def add(request):
             return HttpResponse(status=403)
 
         # 验证重复的主库
-        cluster_names = _dao.objects.filter(Q(cluster_name__iexact=cluster_name) & Q(cluster_role__exact=1))
-        if cluster_names and cluster_role == 1:
+        cluster_masters = _dao.objects.filter(Q(cluster_name__iexact=cluster_name) & Q(cluster_role__exact=1))
+        if cluster_masters and cluster_role == 1:
             context = {'errMsg': u'集群主库已经存在不能添加！'}
             return render(request, 'error.html', context)
 
@@ -96,6 +96,7 @@ def edit(request, cluster_id):
         return render(request, 'error.html', context)
 
     if request.POST:
+        cluster.id = int(request.POST.get("cluster_id"))
         cluster.cluster_name = request.POST.get("cluster_name")
         cluster.cluster_role = int(request.POST.get("cluster_role"))
         cluster.cluster_host = request.POST.get("cluster_host")
@@ -105,10 +106,12 @@ def edit(request, cluster_id):
         cluster.cluster_status = request.POST.get("cluster_status")
 
         # 验证重复的主库
-        cluster_names = _dao.objects.filter(Q(cluster_name__iexact=cluster.cluster_name) & Q(cluster_role__exact=1))
-        if cluster_names and cluster.cluster_role == 1:
-            context = {'errMsg': u'集群主库已经存在不能添加！'}
-            return render(request, 'error.html', context)
+        cluster_masters = _dao.objects.filter(Q(cluster_name__iexact=cluster.cluster_name) & Q(cluster_role__exact=1))
+        if cluster_masters and cluster.cluster_role == 1:
+            # 排除修改主库本身
+            if cluster.id not in [cluster_master.id for cluster_master in cluster_masters]:
+                context = {'errMsg': u'集群主库已经存在不能添加！'}
+                return render(request, 'error.html', context)
         cluster.save()
         return HttpResponseRedirect(HTTP_REFERER)
 
@@ -166,7 +169,8 @@ def delete(request, cluster_id):
 @csrf_exempt
 def setclusterstatus(request):
     cluster_type = request.POST.get("cluster_type")
+    host = request.POST.get("host")
     port = request.POST.get("port")
     stat = request.POST.get("stat")
-    rets = setClusterStatusByPort(cluster_type,port,stat)
+    rets = setClusterStatusByHostPort(cluster_type,host,port,stat)
     return HttpResponse(json.dumps(rets), content_type='application/json')

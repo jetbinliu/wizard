@@ -62,7 +62,6 @@ def allworkflow(request):
     if navStatus == 'all' and loginUserOb.role <= 3:
         # 这句话等同于select * from sql_workflow order by create_time desc limit {offset, limit};
         listWorkflow = workflow.objects.order_by('-create_time')[offset:limit]
-        print(str(workflow.objects.order_by('-create_time')[offset:limit].query))
     elif navStatus == 'all' and loginUserOb.role > 3:
         listWorkflow = workflow.objects.filter(
             Q(engineer=loginUser) | Q(status=2), engineer=loginUser).order_by('-create_time')[offset:limit]
@@ -83,7 +82,7 @@ def allworkflow(request):
                                                engineer=loginUser).order_by('-create_time')[offset:limit]
     else:
         context = {'errMsg': '传入的navStatus参数有误！'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     context = {
                'listWorkflow': listWorkflow,
@@ -99,35 +98,35 @@ def submitsql(request):
     clusters = getAllMySQLClusterInfo(flag='online')
     if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
-       return render(request, 'sqlreview/error.html', context)
+       return render(request, 'error.html', context)
 
-    # 获取所有集群名称
-    listAllClusterName = [cluster.cluster_name for cluster in clusters]
-    # 转换为集合（间接去重）
-    setAllClusterName = set(listAllClusterName)
-    if len(setAllClusterName) < len(listAllClusterName):
-        context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
-        return render(request, 'sqlreview/error.html', context)
+    # # 获取所有集群名称
+    # listAllClusterName = [cluster.cluster_name for cluster in clusters]
+    # # 转换为集合（间接去重）
+    # setAllClusterName = set(listAllClusterName)
+    # if len(setAllClusterName) < len(listAllClusterName):
+    #     context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
+    #     return render(request, 'sqlreview/error.html', context)
 
-    # cluster_hosts列表0号位为主库地址, 登录获取databaase列表
+    # cluster_role 1 为主库, 登录获取databaase列表
     dictAllClusterDb = {}
     for cluster in clusters:
         try:
             dbs = getMySQLClusterDbs(
-                json.loads(cluster.cluster_hosts)[0], cluster.cluster_port,
+                cluster.cluster_host, cluster.cluster_port,
                 cluster.cluster_user, cluster.cluster_password
             )
             dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
-            context = {'errMsg': '%s' % e}
-            return render(request, 'sqlreview/error.html', context)
+            context = {'errMsg': '%s error: %s' % ('submitsql', e)}
+            return render(request, 'error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单
     loginUser = request.session.get('login_username')
     reviewMen = Users.objects.values('username','email','role').filter(role__lte=5).exclude(username=loginUser)
     if len(reviewMen) == 0:
        context = {'errMsg': '审核人为0, 请配置审核人。'}
-       return render(request, 'sqlreview/error.html', context)
+       return render(request, 'error.html', context)
 
     context = {
         'dictAllClusterDb': dictAllClusterDb,
@@ -255,7 +254,7 @@ def detail(request, workflowId):
         Content[5] = Content[5].split('\r\n')   # sql语句
 
     # 工单处于以下状态时允许修改工单
-    allowedToModify = ('自动审核不通过', '发起人终止', '审核人驳回', '执行有异常')
+    allowedToModify = ('自动审核不通过', '发起人终止', '审核人驳回', '执行中', '执行有异常')
 
     context = {
         'workflowDetail': workflowDetail,
@@ -361,8 +360,8 @@ def editsql(request, workflowId):
         return render(request, 'sqlreview/error.html', context)
 
     # 服务器端二次验证，如果当前单子状态不是等待审核人审核状态，则不能发起驳回.
-    if workflowDetail.status not in (2, 4, 5, 7):
-        context = {'errMsg': '当前单子状态不是: 自动审核不通过、发起人终止、审核人驳回、执行有异常等状态，则不能发起修改.'}
+    if workflowDetail.status not in (2, 4, 5, 6, 7):
+        context = {'errMsg': '当前单子状态不是: 自动审核不通过、发起人终止、审核人驳回、执行中、执行有异常等状态，则不能发起修改.'}
         return render(request, 'sqlreview/error.html', context)
 
 
@@ -380,12 +379,12 @@ def editsql(request, workflowId):
         context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
         return render(request, 'sqlreview/error.html', context)
 
-    # cluster_hosts列表0号位为主库地址, 登录获取databaase列表
+    # cluster_host 0号位为主库地址, 登录获取databaase列表
     dictAllClusterDb = {}
     for cluster in clusters:
         try:
             dbs = getMySQLClusterDbs(
-                json.loads(cluster.cluster_hosts)[0], cluster.cluster_port,
+                cluster.cluster_host, cluster.cluster_port,
                 cluster.cluster_user, cluster.cluster_password
             )
             dictAllClusterDb[cluster.cluster_name] = dbs

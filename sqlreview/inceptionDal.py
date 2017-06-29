@@ -39,8 +39,8 @@ class InceptionDao(object):
                 r"([\s\S]*)drop(\s+)database(\s+.*)|([\s\S]*)drop(\s+)table(\s+.*)|([\s\S]*)truncate(\s+)partition(\s+.*)|([\s\S]*)truncate(\s+)table(\s+.*)",
                 sqlContent.lower()):
             return ((
-                    '', '', 2, '', '不能包含【DROP DATABASE】|【DROP TABLE】|【TRUNCATE PARTITION】|【TRUNCATE TABLE】关键字！', '', '',
-                    '', '', ''),)
+                    '', '', 2, '驳回高危SQL', '不能包含【DROP DATABASE】|【DROP TABLE】|【TRUNCATE PARTITION】|【TRUNCATE TABLE】关键字！', sqlContent, '0',
+                    '', '', '0'),)
         else:
             return None
 

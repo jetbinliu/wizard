@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 from account.models import Users
-from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLClusterInfo, getMasterConnStr
+from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLMasterInfo, getMasterConnStr
 from .inceptionDal import InceptionDao
 from .models import workflow, WORKFLOW_STATUS
 from lib.configgetter import Configuration
@@ -95,7 +95,7 @@ def allworkflow(request):
 # 提交SQL的页面
 def submitsql(request):
     # 获取所有在线集群信息
-    clusters = getAllMySQLClusterInfo(flag='online')
+    clusters = getAllMySQLMasterInfo(flag='online')
     if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'error.html', context)
@@ -118,7 +118,7 @@ def submitsql(request):
             )
             dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
-            context = {'errMsg': '%s error: %s' % ('submitsql', e)}
+            context = {'errMsg': u'连接到主库 %s:%d 失败: %s' % (cluster.cluster_host, cluster.cluster_port, e)}
             return render(request, 'error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单
@@ -155,13 +155,13 @@ def autoreview(request):
     sqlContent = sqlContent.strip()
     if sqlContent[-1] != ";":
         context = {'errMsg': "SQL语句结尾没有以;结尾，请后退重新修改并提交！"}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 交给inception进行自动审核
     result = inceptionDao.sqlautoReview(sqlContent, clusterName, isBackup)
     if result is None or len(result) == 0:
         context = {'errMsg': 'inception返回的结果集为空！可能是SQL语句有语法错误'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
     # 要把result转成JSON存进数据库里，方便SQL单子详细信息展示
     jsonResult = json.dumps(result)
 
@@ -366,18 +366,18 @@ def editsql(request, workflowId):
 
 
     # 获取所有在线集群信息
-    clusters = getAllMySQLClusterInfo(flag='online')
+    clusters = getAllMySQLMasterInfo(flag='online')
     if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'sqlreview/error.html', context)
 
-    # 获取所有集群名称
-    listAllClusterName = [cluster.cluster_name for cluster in clusters]
-    # 转换为集合（间接去重）
-    setAllClusterName = set(listAllClusterName)
-    if len(setAllClusterName) < len(listAllClusterName):
-        context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
-        return render(request, 'sqlreview/error.html', context)
+    # # 获取所有集群名称
+    # listAllClusterName = [cluster.cluster_name for cluster in clusters]
+    # # 转换为集合（间接去重）
+    # setAllClusterName = set(listAllClusterName)
+    # if len(setAllClusterName) < len(listAllClusterName):
+    #     context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
+    #     return render(request, 'sqlreview/error.html', context)
 
     # cluster_host 0号位为主库地址, 登录获取databaase列表
     dictAllClusterDb = {}
@@ -389,7 +389,7 @@ def editsql(request, workflowId):
             )
             dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
-            context = {'errMsg': '%s' % e}
+            context = {'errMsg': '%s:%d %s' % (cluster.cluster_host, cluster.cluster_port, e)}
             return render(request, 'sqlreview/error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单

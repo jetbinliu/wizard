@@ -37,7 +37,7 @@ def getMySQLClusterDbs(host, port, user, passwd):
         connection.close()
     return dbs
 
-def getAllMySQLClusterInfo(flag='online'):
+def getAllMySQLMasterInfo(flag='online'):
 
     # 查询在线集群信息
     if flag == 'online':

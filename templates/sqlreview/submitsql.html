@@ -3,95 +3,134 @@
 
 {% block content %}
     <div class="container-fluid">
-        <div class="row clearfix">
 
-            <form id="form-submitsql" action="/sqlreview/autoreview/" method="post" class="form-horizontal" role="form">
-                {% csrf_token %}
-                <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
+        <form id="form-submitsql" action="/sqlreview/autoreview/" method="post" class="form-horizontal" role="form">
+            {% csrf_token %}
+            <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
+            <div class="row clearfix">
+                <fieldset>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label class="control-label">提交方式<span style="color:#f00">*</span></label>
+                            <label class="checkbox-inline" style="vertical-align: top"><input type="radio" name="role"
+                                                                                              value="1" checked/>
+                                文本
+                            </label>
+                            <label class="checkbox-inline" style="vertical-align: top"><input type="radio" name="role"
+                                                                                              value="0"/>
+                                附件
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">其它选项<span style="color:#f00">*</span></label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
 
-                <div class="col-md-8 column">
-                    <textarea id="sql_content" name="sql_content" class="form-control" data-name="SQL内容"
-                              placeholder="请在此提交SQL，请以分号结尾。例如：use test; create table t1(id int)engine=innodb;" rows=20
-                              required>{{sqlContent}}</textarea>
-                </div>
+            <div class="row clearfix">
+                <fieldset>
+                    <div class="col-md-8 column">
+                        <div class="form-group">
+                            <label class="control-label" style="vertical-align:top;margin-right: 2%;">执行语句</label>
+                            <textarea id="sql_content" name="sql_content" class="form-control" data-name="SQL内容"
+                                      placeholder="请在此提交SQL，请以分号结尾。例如：use test; create table t1(id int)engine=innodb;"
+                                      rows=18
+                                      required
+                                      style="display: inline;width: 86%;margin: auto">{{ sqlContent }}</textarea>
+                        </div>
 
-                <div class="col-md-4 column">
-                    <div class="form-group">
-                        <input id="workflow_name" type="text" name="workflow_name" value="{{ workflowDetail.workflow_name }}" class="form-control"
-                               data-name="上线工单名称" placeholder="请输入上线工单名称，如:XX项目会员功能建表" required>
+                        <div class="form-group">
+                            <label for="InputSQLFile" style="margin-right: 2%;">增加附件</label>
+                            <input type="file" id="InputSQLFile" name="txtName" onchange="loadSqlFile(this)"
+                                   style="display: inline"/>
+                            <p class="help-block">
+                                提交方式为"附件"时可上传附件形式sql文本，大小<=2M.
+                            </p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <select id="cluster_name" name="cluster_name"
-                                class="selectpicker show-tick form-control bs-select-hidden" data-name="要上线的集群"
-                                data-placeholder="请选择要上线的集群:" required>
-                            <option value="is-empty" disabled="" selected="selected">请选择要上线的集群:</option>
-                            {% for cluster_name,dbs in dictAllClusterDb.items %}
-                                <option value="{{ cluster_name }}">{{ cluster_name }}集群 (包含db：
-                                    {% for db in dbs %}
-                                        {{ db }}{% if not forloop.last %},{% endif %}
-                                    {% endfor %}
-                                    )
-                                </option>
-                            {% endfor %}
 
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="is_backup" name="is_backup"
-                                class="selectpicker show-tick form-control bs-select-hidden" data-name="是否选择备份"
-                                data-placeholder="请选择是否要备份:" required>
-                            <option value="is-empty" disabled="" selected="selected">请选择是否要备份:</option>
-                            <option value="1">是</option>
-                            <option value="0">否</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <select id="review_man" name="review_man"
-                                class="selectpicker show-tick form-control bs-select-hidden" data-name="审核人"
-                                data-placeholder="请选择RD审核人:" required>
-                            <option value="is-empty" disabled="" selected="selected">请选择主审核人:</option>
-                            {% for man in reviewMen %}
-                                {% if not man.username == 'admin' %}
-                                    <option value="{{ man.username }}">{{ man.username }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="glyphicon glyphicon-plus"></i>&nbsp;
-                                <a id="add_sub_review_man" data-toggle="collapse" data-parent="#accordion"
-                                   href="#collapse_sub_review_man">添加副审核人(可选)</a>
-                            </div>
-                            <div id="collapse_sub_review_man" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    {% for man in reviewMen %}
-                                        {% if not man.username == 'admin' %}
-                                            <label class="checkbox" id="sub_review_man_{{ man.username }}" style="font-weight: normal">
-                                                <input class="sub_review_man" type="radio" name="sub_review_man"
-                                                       value="{{ man.username }}"/>
-                                                {{ man.username }}
-                                            </label>
-                                        {% endif %}
-                                    {% endfor %}
+                    <div class="col-md-4 column">
+                        <div class="form-group">
+                            <input id="workflow_name" type="text" name="workflow_name"
+                                   value="{{ workflowDetail.workflow_name }}" class="form-control"
+                                   data-name="上线工单名称" placeholder="请输入上线工单名称，如:XX项目会员功能建表" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="cluster_name" name="cluster_name"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="要上线的集群"
+                                    data-placeholder="请选择要上线的集群:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择要上线的集群:</option>
+                                {% for cluster_name,dbs in dictAllClusterDb.items %}
+                                    <option value="{{ cluster_name }}">{{ cluster_name }}集群 (包含db：
+                                        {% for db in dbs %}
+                                            {{ db }}{% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                        )
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="is_backup" name="is_backup"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="是否选择备份"
+                                    data-placeholder="请选择是否要备份:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择是否要备份:</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select id="review_man" name="review_man"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="审核人"
+                                    data-placeholder="请选择RD审核人:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择主审核人:</option>
+                                {% for man in reviewMen %}
+                                    {% if not man.username == 'admin' %}
+                                        <option value="{{ man.username }}">{{ man.username }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="glyphicon glyphicon-plus"></i>&nbsp;
+                                    <a id="add_sub_review_man" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapse_sub_review_man">添加副审核人(可选)</a>
+                                </div>
+                                <div id="collapse_sub_review_man" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        {% for man in reviewMen %}
+                                            {% if not man.username == 'admin' %}
+                                                <label class="checkbox" id="sub_review_man_{{ man.username }}"
+                                                       style="font-weight: normal">
+                                                    <input class="sub_review_man" type="radio" name="sub_review_man"
+                                                           value="{{ man.username }}"/>
+                                                    {{ man.username }}
+                                                </label>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <input type="button" id="btn-autoreview" class="btn btn-info btn-lg" value="SQL检测"/>
+                            <button type="reset" class="btn btn-warning">清空选项</button>
+                            <!-- <button type="submit" class="btn btn-primary">SQL提交</button> -->
+                            <input id="btn-submitsql" type="button" class="btn btn-primary" value="SQL提交"/>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="button" id="btn-autoreview" class="btn btn-info btn-lg" value="SQL检测"/>
-                        <button type="reset" class="btn btn-warning">清空选项</button>
-                        <!-- <button type="submit" class="btn btn-primary">SQL提交</button> -->
-                        <input id="btn-submitsql" type="button" class="btn btn-primary" value="SQL提交"/>
-                    </div>
-                </div>
-            </form>
-        </div>
+                </fieldset>
+            </div>
+        </form>
 
         <div id="inception-result" style="display:none;" class="row clearfix">
             <br/>
-            <div id="inception-result-col" class="col-md-12">
+            <div id="inception-result-col" class="col-md-12" style="width: 100%">
             </div>
         </div>
 

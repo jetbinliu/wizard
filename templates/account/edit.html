@@ -28,7 +28,7 @@
                 <div class="control-group">
                     <label class="control-label">角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色&nbsp;&nbsp;</label>
                     {% for key, value in ROLE_DICT.items %}
-                        <label class="checkbox-inline">
+                        <label class="checkbox-inline" style="vertical-align: top">
                             <input type="radio" name="role" value="{{ key }}"
                                    {% if key == user.role %}checked{% endif %}/>
                             {{ value }}
@@ -61,6 +61,7 @@
                     <button class="btn" onclick="{% url 'account_index' %})">取消</button>
                     <a class="btn btn-primary btn-sm" href="{% url 'account_index' %}">
                 <i class="glyphicon glyphicon-backward icon-white"></i>返回</a>
+
                 </div>
             </fieldset>
         </form>

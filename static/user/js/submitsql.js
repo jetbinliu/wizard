@@ -86,6 +86,21 @@ function sleep(delay){
   }
 }
 
+function loadSqlFile(txtName) {
+	if (txtName.files.length <= 0) return;    //点击取消时，直接退出
+	var f = txtName.files[0];
+	var sqlFile = txtName.value;
+
+	//检查类型、大小等信息，出错则退出，文件不会上传
+    if (f.type != 'image/jpeg' || f.size > 100*1024) {
+        txtName.value = '';                   //保证重复选择某个文件时触发 onchange 事件
+        alert('错误提示');
+        return;
+    }
+    //下面是上传代码
+    //为了安全，服务器端一般也要有检查机制，那就不是本文要讨论的了
+}
+
 
 
 

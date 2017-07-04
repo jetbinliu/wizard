@@ -20,7 +20,7 @@
                 <div class="control-group">
                     <label class="control-label">集群角色<span style="color:#f00">*</span></label>
                     {% for key, value in CLUSTER_ROLE.items %}
-                        <label class="checkbox-inline">
+                        <label class="checkbox-inline" style="vertical-align: top">
                             <input type="radio" name="cluster_role" value="{{ key }}" {% if forloop.counter == 1 %}checked{% endif %}/>{{ value }}</label>
                     {% endfor %}
                 </div>

@@ -147,7 +147,6 @@ def autoreview(request):
 
     reviewMans = [reviewMan, subReviewMan]
 
-
     # 服务器端参数验证
     if sqlContent is None or workflowName is None or clusterName is None or isBackup is None or reviewMan is None:
         context = {'errMsg': '页面提交参数可能为空'}
@@ -439,6 +438,7 @@ def execute(request):
     # 将流程状态修改为执行中，并更新reviewok_time字段
     workflowDetail.status = 6
     workflowDetail.reviewok_time = getNow()
+    print(json.dumps(d),len(json.dumps(d)))
     workflowDetail.notes = json.dumps(d)
     workflowDetail.save()
 

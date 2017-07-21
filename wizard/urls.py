@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^authenticate/$', account_views_ajax.authenticate),
     url(r'^account/', include('account.urls')),
     url(r'^common/', include('common.urls')),
+    url(r'^sqlquery/', include('sqlquery.urls')),
     url(r'^sqlreview/', include('sqlreview.urls')),
     url(r'^dbconfig/', include('dbconfig.urls')),
     url(r'^bakconfig/', include('bakconfig.urls')),

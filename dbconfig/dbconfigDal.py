@@ -37,17 +37,17 @@ def getMySQLClusterDbs(host, port, user, passwd):
         connection.close()
     return dbs
 
-def getAllMySQLMasterInfo(flag='online'):
+def getAllMySQLInfo(cluster_role=1, flag='online'):
 
     # 查询在线集群信息
     if flag == 'online':
-        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=1) & Q(cluster_status=1))
+        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=cluster_role) & Q(cluster_status=1))
     # 查询在线集群信息
     elif flag == 'offline':
-        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=1) & Q(cluster_status=0))
+        clusters = mysql_cluster_config.objects.filter(Q(cluster_role=cluster_role) & Q(cluster_status=0))
     # 查询全部集群信息
     elif flag == 'all':
-        clusters = mysql_cluster_config.objects.filter(cluster_role=1)
+        clusters = mysql_cluster_config.objects.filter(cluster_role=cluster_role)
     else:
         return None
     for cluster in clusters:
@@ -58,13 +58,30 @@ def getAllMySQLMasterInfo(flag='online'):
 # 根据集群名获取主库连接字符串，并封装成一个dict
 def getMasterConnStr(clusterName):
     listMasters = mysql_cluster_config.objects.filter(Q(cluster_name=clusterName) & Q(cluster_role=1))
+    if len(listMasters) != 1:
+        print("Error: 集群主库配置返回为0")
+        return None
+    Host = listMasters[0].cluster_host
+    Port = listMasters[0].cluster_port
+    User = listMasters[0].cluster_user
+    Password = prpCryptor.decrypt(listMasters[0].cluster_password)
+    dictConn = {'Host': Host, 'Port': Port, 'User': User,
+                'Password': Password}
+    return dictConn
 
-    masterHost = listMasters[0].cluster_host
-    masterPort = listMasters[0].cluster_port
-    masterUser = listMasters[0].cluster_user
-    masterPassword = prpCryptor.decrypt(listMasters[0].cluster_password)
-    dictConn = {'masterHost': masterHost, 'masterPort': masterPort, 'masterUser': masterUser,
-                'masterPassword': masterPassword}
+
+# 根据集群名获取从库连接字符串，并封装成一个dict
+def getSlaveConnStr(clusterName):
+    listSlaves = mysql_cluster_config.objects.filter(Q(cluster_name=clusterName) & Q(cluster_role=0) & Q(cluster_status=1))
+    if len(listSlaves) < 1:
+        print("Error: 集群从库配置返回为0")
+        return None
+    Host = listSlaves[-1].cluster_host
+    Port = listSlaves[-1].cluster_port
+    User = listSlaves[-1].cluster_user
+    Password = prpCryptor.decrypt(listMasters[0].cluster_password)
+    dictConn = {'Host': Host, 'Port': Port, 'User': User,
+                'Password': Password}
     return dictConn
 
 

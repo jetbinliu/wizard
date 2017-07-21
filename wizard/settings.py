@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'account',
     'common',
+    'sqlquery',
     'sqlreview',
     'dbconfig',
     'conf',
@@ -89,9 +90,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wizard',
-        'USER': 'superdba',
-        'PASSWORD': 'guzaneyR@cj7M6m',
-        'HOST': '192.168.37.10',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '10.1.1.131',
         'PORT': '3306',
     }
 }

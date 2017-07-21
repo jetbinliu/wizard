@@ -7,7 +7,7 @@
                 {% else %}
             <li>
         {% endif %}
-        <a href="/allworkflow/?pageNo=0&navStatus=all">全部工单</a>
+        <a href="/sqlreview/allworkflow/?pageNo=0&navStatus=all">全部工单</a>
         </li>
 
         {% if navStatus == 'waitingforme' %}
@@ -15,7 +15,7 @@
                 {% else %}
             <li>
         {% endif %}
-        <a href="/allworkflow/?pageNo=0&navStatus=waitingforme">待我审核的</a>
+        <a href="/sqlreview/allworkflow/?pageNo=0&navStatus=waitingforme">待我审核的</a>
         </li>
 
         {% if navStatus == 'finish' %}
@@ -23,7 +23,7 @@
                 {% else %}
             <li>
         {% endif %}
-        <a href="/allworkflow/?pageNo=0&navStatus=finish">已执行完毕</a>
+        <a href="/sqlreview/allworkflow/?pageNo=0&navStatus=finish">已执行完毕</a>
         </li>
 
         {% if navStatus == 'autoreviewwrong' %}
@@ -31,7 +31,7 @@
                 {% else %}
             <li>
         {% endif %}
-        <a href="/allworkflow/?pageNo=0&navStatus=autoreviewwrong">自动审核不通过的</a>
+        <a href="/sqlreview/allworkflow/?pageNo=0&navStatus=autoreviewwrong">自动审核不通过的</a>
         </li>
     </ul>
 
@@ -46,6 +46,9 @@
             </th>
             <th>
                 发起人
+            </th>
+            <th>
+                审核人
             </th>
             <th>
                 工单状态
@@ -71,6 +74,9 @@
                     {{ workflow.engineer }}
                 </td>
                 <td>
+                    {{ workflow.review_man }}
+                </td>
+                <td>
                     {% for key, value in WORKFLOW_STATUS.items %}
                         {% if key == workflow.status %}
                             {{ value }}
@@ -86,7 +92,7 @@
             </tr>
         {% empty %}
             <tr>
-                <td>当前状态暂无工单，嘿嘿嘿.</td>
+                <td>当前状态暂无工单,嘿嘿嘿.</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -101,26 +107,26 @@
     <div style="text-align:center;">
         <ul class="pagination" style="display:inline-block;">
             <li>
-                <a href="/allworkflow/?pageNo={{ pageNo|add:"-1" }}&navStatus={{ navStatus }}">前一页</a>
+                <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"-1" }}&navStatus={{ navStatus }}">前一页</a>
             </li>
             <li class="active">
-                <a href="/allworkflow/?pageNo={{ pageNo|add:"0" }}&navStatus={{ navStatus }}">{{ pageNo|add:"1" }}</a>
+                <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"0" }}&navStatus={{ navStatus }}">{{ pageNo|add:"1" }}</a>
             </li>
             {% if listWorkflow|length >= PAGE_LIMIT %}
                 <li>
-                    <a href="/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">{{ pageNo|add:"2" }}</a>
+                    <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">{{ pageNo|add:"2" }}</a>
                 </li>
                 <li>
-                    <a href="/allworkflow/?pageNo={{ pageNo|add:"2" }}&navStatus={{ navStatus }}">{{ pageNo|add:"3" }}</a>
+                    <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"2" }}&navStatus={{ navStatus }}">{{ pageNo|add:"3" }}</a>
                 </li>
                 <li>
-                    <a href="/allworkflow/?pageNo={{ pageNo|add:"3" }}&navStatus={{ navStatus }}">{{ pageNo|add:"4" }}</a>
+                    <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"3" }}&navStatus={{ navStatus }}">{{ pageNo|add:"4" }}</a>
                 </li>
                 <li>
-                    <a href="/allworkflow/?pageNo={{ pageNo|add:"4" }}&navStatus={{ navStatus }}">{{ pageNo|add:"5" }}</a>
+                    <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"4" }}&navStatus={{ navStatus }}">{{ pageNo|add:"5" }}</a>
                 </li>
                 <li>
-                    <a href="/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">后一页</a>
+                    <a href="/sqlreview/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">后一页</a>
                 </li>
             {% endif %}
         </ul>

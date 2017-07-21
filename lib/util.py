@@ -1,7 +1,9 @@
 # -*- coding: UTF-8 -*-
 
 import re
+import json
 import datetime
+
 
 
 # 判断是否登录
@@ -16,13 +18,21 @@ def validateEmail(email):
     else:
         return False
 
-#获取当前时间
+# 获取当前时间
 def getNow():
     NOW = datetime.datetime.now()
     return datetime.datetime.strftime(NOW, "%Y-%m-%d %H:%M:%S")
 
-#获取当前请求url
+# 获取当前请求url
 def _getDetailUrl(request):
     scheme = request.scheme
     host = request.META['HTTP_HOST']
     return "%s://%s/detail/" % (scheme, host)
+
+# 时间序列化处理，solution is to subclass json.JSONEncoder
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime.datetime):
+            return o.isoformat()
+        return json.JSONEncoder.default(self, o)
+# 使用方法： json.dumps(yourobj, cls=DateTimeEncoder)

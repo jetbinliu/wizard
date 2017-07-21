@@ -44,21 +44,13 @@ class InceptionDao(object):
         else:
             return None
 
-    def sqlautoReview(self, sqlContent, clusterName, isBackup='否'):
+    def sqlautoReview(self,dictConn, sqlContent):
         '''
         将sql交给inception进行自动审核，并返回审核结果。
         '''
-        listMasters = mysql_cluster_config.objects.filter(Q(cluster_name=clusterName) & Q(cluster_role=1))
-        if len(listMasters) != 1:
-            print("Error: 集群配置返回为0")
-        masterHost = listMasters[0].cluster_host
-        masterPort = listMasters[0].cluster_port
-        masterUser = listMasters[0].cluster_user
-        masterPassword = self.prpCryptor.decrypt(listMasters[0].cluster_password)
-
         # 这里无需判断字符串是否以；结尾，直接抛给inception enable check即可。
         # if sqlContent[-1] != ";":
-        # sqlContent = sqlContent + ";"
+        #   sqlContent = sqlContent + ";"
 
         if conf.has_option("INCEPTION", 'CRITICAL_DDL_ON_OFF'):
             if conf.get("INCEPTION", 'CRITICAL_DDL_ON_OFF').lower() == "on":
@@ -72,7 +64,7 @@ class InceptionDao(object):
                 sql = "/*--user=%s;--password=%s;--host=%s;--enable-check=1;--port=%s;*/\
                   inception_magic_start;\
                   %s\
-                  inception_magic_commit;" % (masterUser, masterPassword, masterHost, str(masterPort), sqlContent)
+                  inception_magic_commit;" % (dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']), sqlContent)
                 result = mdb(sql, self.inception_host, self.inception_port, '', '', '')
         return result
 
@@ -91,9 +83,9 @@ class InceptionDao(object):
              inception_magic_start;\
              %s\
              inception_magic_commit;" % (
-        dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
-        workflowDetail.sql_content)
+        dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']), workflowDetail.sql_content)
         splitResult = mdb(sqlSplit, self.inception_host, self.inception_port, '', '', '')
+        print(splitResult)
 
         tmpList = []
         # 对于split好的结果，再次交给inception执行.这里无需保持在长连接里执行，短连接即可.
@@ -103,8 +95,9 @@ class InceptionDao(object):
                     inception_magic_start;\
                     %s\
                     inception_magic_commit;" % (
-            dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
+            dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']),
             strBackup, sqlTmp)
+            print(sqlExecute)
 
             executeResult = mdb(sqlExecute, self.inception_host, self.inception_port, '', '', '')
             tmpList.append(executeResult)

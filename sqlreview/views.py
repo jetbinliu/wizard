@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 
 from account.models import Users
-from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLMasterInfo, getMasterConnStr
+from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLInfo, getMasterConnStr
 from .inceptionDal import InceptionDao
 from .models import workflow, WORKFLOW_STATUS
 from lib.configgetter import Configuration
@@ -23,7 +23,7 @@ inceptionDao = InceptionDao()
 # 首页，也是查看所有SQL工单页面，具备翻页功能
 def allworkflow(request):
     # 一个页面展示
-    PAGE_LIMIT = 12
+    PAGE_LIMIT = 10
 
     pageNo = 0
     navStatus = 0
@@ -48,7 +48,7 @@ def allworkflow(request):
                 pageNo = 0
         except ValueError as ve:
             context = {'errMsg': 'pageNo参数不是int.'}
-            return render(request, 'sqlreview/error.html', context)
+            return render(request, 'error.html', context)
 
     loginUser = request.session.get('login_username')
     # 查询workflow model，根据pageNo和navStatus获取对应的内容
@@ -58,31 +58,35 @@ def allworkflow(request):
     # 修改全部工单、审核不通过、已执行完毕界面工程师只能看到自己发起的工单，审核人可以看到全部
     listWorkflow = []
     # 查询全部流程
+    roleLeve = int(conf.get("sqlabout", 'roleLeve'))
     loginUserOb = Users.objects.get(username=loginUser)
-    if navStatus == 'all' and loginUserOb.role <= 3:
+    if navStatus == 'all' and loginUserOb.role <= roleLeve:
         # 这句话等同于select * from sql_workflow order by create_time desc limit {offset, limit};
         listWorkflow = workflow.objects.order_by('-create_time')[offset:limit]
-    elif navStatus == 'all' and loginUserOb.role > 3:
-        listWorkflow = workflow.objects.filter(
-            Q(engineer=loginUser) | Q(status=2), engineer=loginUser).order_by('-create_time')[offset:limit]
+    elif navStatus == 'all' and loginUserOb.role > roleLeve:
+        listWorkflow = workflow.objects.filter(engineer=loginUser).order_by('-create_time')[offset:limit]
     elif navStatus == 'waitingforme':
         listWorkflow = workflow.objects.filter(status=3,
-                                               review_man=loginUser).order_by('-create_time')[offset:limit]
-    elif navStatus == 'finish' and loginUserOb.role == '审核人':
+                                               review_man__icontains=loginUser).order_by('-create_time')[offset:limit]
+    elif navStatus == 'finish' and loginUserOb.role <= roleLeve:
         listWorkflow = workflow.objects.filter(status=8).order_by('-create_time')[
                        offset:limit]
-    elif navStatus == 'finish' and loginUserOb.role == '工程师':
+    elif navStatus == 'finish' and loginUserOb.role > roleLeve:
         listWorkflow = workflow.objects.filter(status=8, engineer=loginUser).order_by(
             '-create_time')[offset:limit]
-    elif navStatus == 'autoreviewwrong' and loginUserOb.role == '审核人':
+    elif navStatus == 'autoreviewwrong' and loginUserOb.role <= roleLeve:
         listWorkflow = workflow.objects.filter(status=2).order_by('-create_time')[
                        offset:limit]
-    elif navStatus == 'autoreviewwrong' and loginUserOb.role == '工程师':
+    elif navStatus == 'autoreviewwrong' and loginUserOb.role > roleLeve:
         listWorkflow = workflow.objects.filter(status=2,
                                                engineer=loginUser).order_by('-create_time')[offset:limit]
     else:
         context = {'errMsg': '传入的navStatus参数有误！'}
         return render(request, 'error.html', context)
+
+    # reviewMen
+    for Workflow in listWorkflow:
+        Workflow.review_man = " ".join(json.loads(Workflow.review_man))
 
     context = {
                'listWorkflow': listWorkflow,
@@ -95,7 +99,7 @@ def allworkflow(request):
 # 提交SQL的页面
 def submitsql(request):
     # 获取所有在线集群信息
-    clusters = getAllMySQLMasterInfo(flag='online')
+    clusters = getAllMySQLInfo(cluster_role=1, flag='online')
     if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'error.html', context)
@@ -106,7 +110,7 @@ def submitsql(request):
     # setAllClusterName = set(listAllClusterName)
     # if len(setAllClusterName) < len(listAllClusterName):
     #     context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
-    #     return render(request, 'sqlreview/error.html', context)
+    #     return render(request, 'error.html', context)
 
     # cluster_role 1 为主库, 登录获取databaase列表
     dictAllClusterDb = {}
@@ -150,14 +154,15 @@ def autoreview(request):
     # 服务器端参数验证
     if sqlContent is None or workflowName is None or clusterName is None or isBackup is None or reviewMan is None:
         context = {'errMsg': '页面提交参数可能为空'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
     sqlContent = sqlContent.strip()
     if sqlContent[-1] != ";":
         context = {'errMsg': "SQL语句结尾没有以;结尾，请后退重新修改并提交！"}
         return render(request, 'error.html', context)
 
     # 交给inception进行自动审核
-    result = inceptionDao.sqlautoReview(sqlContent, clusterName, isBackup)
+    dictConn = getMasterConnStr(clusterName)
+    result = inceptionDao.sqlautoReview(dictConn, sqlContent)
     if result is None or len(result) == 0:
         context = {'errMsg': 'inception返回的结果集为空！可能是SQL语句有语法错误'}
         return render(request, 'error.html', context)
@@ -239,7 +244,7 @@ def detail(request, workflowId):
     authorizedGroups.extend(reviewMans)
     if loginUser is None or loginUser not in authorizedGroups:
         context = {'errMsg': '当前登录用户不是发起人，也不属于审核人群，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     listContent = None
     if workflowDetail.status in ('执行有异常', '已正常结束'):
@@ -271,7 +276,7 @@ def cancel(request):
     workflowId = request.POST['workflowid']
     if workflowId == '' or workflowId is None:
         context = {'errMsg': 'workflowId参数为空.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     workflowId = int(workflowId)
     workflowDetail = workflow.objects.get(id=workflowId)
@@ -280,12 +285,12 @@ def cancel(request):
     loginUser = request.session.get('login_username', False)
     if loginUser is None or loginUser != workflowDetail.engineer:
         context = {'errMsg': '当前登录用户不是发起人，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 服务器端二次验证，如果当前单子状态不是等待审核人审核状态，则不能发起终止.
     if workflowDetail.status != 3:
         context = {'errMsg': '当前单子状态不是等待审核人审核状态，则不能发起终止.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     workflowDetail.finish_time = getNow()
     workflowDetail.status = 4
@@ -299,7 +304,7 @@ def reject(request):
     rejectedMan = request.POST['rejected_man']
     if workflowId == '' or workflowId is None:
         context = {'errMsg': 'workflowId参数为空.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     workflowId = int(workflowId)
     workflowDetail = workflow.objects.get(id=workflowId)
@@ -308,12 +313,12 @@ def reject(request):
     loginUser = request.session.get('login_username', False)
     if loginUser is None or loginUser not in json.loads(workflowDetail.review_man):
         context = {'errMsg': '当前登录用户不是审核人，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 服务器端二次验证，如果当前单子状态不是等待审核人审核状态，则不能发起驳回.
     if workflowDetail.status != 3:
         context = {'errMsg': '当前单子状态不是等待审核人审核状态，则不能发起终止.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     #驳回工单审核人用户名
     d = json.loads(workflowDetail.notes)
@@ -356,29 +361,21 @@ def editsql(request, workflowId):
     loginUser = request.session.get('login_username', False)
     if loginUser is None or loginUser != workflowDetail.engineer:
         context = {'errMsg': '当前登录用户不是发起人，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 服务器端二次验证，如果当前单子状态不是等待审核人审核状态，则不能发起驳回.
     if workflowDetail.status not in (2, 4, 5, 6, 7):
         context = {'errMsg': '当前单子状态不是: 自动审核不通过、发起人终止、审核人驳回、执行中、执行有异常等状态，则不能发起修改.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
 
     # 获取所有在线集群信息
-    clusters = getAllMySQLMasterInfo(flag='online')
+    # cluster_role=1为主库地址, 登录获取databaase列表
+    clusters = getAllMySQLInfo(cluster_role=1, flag='online')
     if len(clusters) == 0:
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
-       return render(request, 'sqlreview/error.html', context)
+       return render(request, 'error.html', context)
 
-    # # 获取所有集群名称
-    # listAllClusterName = [cluster.cluster_name for cluster in clusters]
-    # # 转换为集合（间接去重）
-    # setAllClusterName = set(listAllClusterName)
-    # if len(setAllClusterName) < len(listAllClusterName):
-    #     context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
-    #     return render(request, 'sqlreview/error.html', context)
-
-    # cluster_host 0号位为主库地址, 登录获取databaase列表
     dictAllClusterDb = {}
     for cluster in clusters:
         try:
@@ -389,14 +386,14 @@ def editsql(request, workflowId):
             dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
             context = {'errMsg': '%s:%d %s' % (cluster.cluster_host, cluster.cluster_port, e)}
-            return render(request, 'sqlreview/error.html', context)
+            return render(request, 'error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单
     loginUser = request.session.get('login_username')
     reviewMen = Users.objects.values('username','email','role').filter(role__lte=5).exclude(username=loginUser)
     if len(reviewMen) == 0:
        context = {'errMsg': '审核人为0, 请配置审核人。'}
-       return render(request, 'sqlreview/error.html', context)
+       return render(request, 'error.html', context)
 
     context = {
                'workflowDetail': workflowDetail,
@@ -413,7 +410,7 @@ def execute(request):
     reviewedMan = request.POST['reviewed_man']
     if workflowId == '' or workflowId is None:
         context = {'errMsg': 'workflowId参数为空.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     workflowId = int(workflowId)
     workflowDetail = workflow.objects.get(id=workflowId)
@@ -424,12 +421,12 @@ def execute(request):
     loginUser = request.session.get('login_username', False)
     if loginUser is None or loginUser not in reviewMans:
         context = {'errMsg': '当前登录用户不是审核人，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 服务器端二次验证，当前工单状态必须为等待人工审核
     if workflowDetail.status != 3:
         context = {'errMsg': '当前工单状态不是等待人工审核中，请刷新当前页面！'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     # 审核通过工单审核人用户名
     d = json.loads(workflowDetail.notes)
@@ -438,7 +435,6 @@ def execute(request):
     # 将流程状态修改为执行中，并更新reviewok_time字段
     workflowDetail.status = 6
     workflowDetail.reviewok_time = getNow()
-    print(json.dumps(d),len(json.dumps(d)))
     workflowDetail.notes = json.dumps(d)
     workflowDetail.save()
 
@@ -481,7 +477,7 @@ def rollbacksql(request):
     workflowId = request.GET['workflowid']
     if workflowId == '' or workflowId is None:
         context = {'errMsg': 'workflowId参数为空.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
     workflowId = int(workflowId)
 
     # 根据workflowId去db里检索工单
@@ -496,7 +492,7 @@ def rollbacksql(request):
     authorizedGroups.extend(reviewMans)
     if loginUser is None or loginUser not in authorizedGroups:
         context = {'errMsg': '当前登录用户不是发起人，也不属于审核人群，请重新登录.'}
-        return render(request, 'sqlreview/error.html', context)
+        return render(request, 'error.html', context)
 
     listBackupSql = inceptionDao.getRollbackSqlList(workflowId)
 

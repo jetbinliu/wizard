@@ -65,9 +65,7 @@
         {% for row in workflowDetail.query_result %}
             <tr>
             {% for column in row %}
-                <td class="sensitive_fields">
-                    {{ column }}
-                </td>
+                <td class="sensitive_fields">{{ column }}</td>
             {% endfor %}
             </tr>
         {% endfor %}

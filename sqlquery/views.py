@@ -130,7 +130,7 @@ def autoquery(request):
     for result in results:
         for index, item in enumerate(field_names):
             if item in sensitive_fields:
-                result[index] = 'pbkdf2_sha256$' + str(prpCryptor.encrypt(result[index]))
+                result[index] = 'pbkdf2_sha256$' + prpCryptor.encrypt(result[index]).decode('utf-8')
 
 
     Workflow = workflow()

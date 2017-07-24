@@ -103,14 +103,36 @@ def autoquery(request):
     if not workflowName or not clusterName or not cluster_db or not sqlContent:
         context = {'errMsg': '页面提交参数可能为空'}
         return render(request, 'error.html', context)
-    sqlContent = sqlContent.strip()
+    sqlContent = sqlContent.strip().lower()
     if sqlContent[-1] != ";":
         sqlContent = sqlContent + ";"
+
+    # 分析select语句，提高系统安全性
+    LIMITS = 500
+    ERRFLAG = None
+    if sqlContent.startswith("select") and 'where' in sqlContent and 'limit' in sqlContent:
+        _LIMITS = sqlContent.split('limit')[-1].split(',')
+        LEN_LIMITS = len(_LIMITS)
+        try:
+            if LEN_LIMITS in (1, 2):
+                _LIMITS = int(_LIMITS[-1].strip()[0:-1])
+                if _LIMITS <=0 or _LIMITS > 500:
+                    ERRFLAG = True
+            else:
+                ERRFLAG = True
+        except:
+            ERRFLAG = True
+    else:
+        ERRFLAG = True
+
+    if ERRFLAG:
+        context = {'errMsg': '请输入正确的select语句: 合适用where条件、limit条数不大于500！'}
+        return render(request, 'error.html', context)
 
     # 获取当前登录用户作为工单发起人
     engineer = request.session.get('login_username', False)
 
-    # 获取从库连接信息，如果从库不存在则连接到主库
+    # 获取从库连接信息，如果从库不存在则连接到主库查询
     dictSlaveConn = getSlaveConnStr(clusterName)
     if dictSlaveConn:
         dictConn = dictSlaveConn
@@ -130,8 +152,11 @@ def autoquery(request):
     for result in results:
         for index, item in enumerate(field_names):
             if item in sensitive_fields:
-                result[index] = 'pbkdf2_sha256$' + prpCryptor.encrypt(result[index]).decode('utf-8')
-
+                try:
+                    result[index] = 'pbkdf2_sha256$' + prpCryptor.encrypt(result[index]).decode('utf-8')
+                except:
+                    # 处理字段为空值的情况
+                    result[index] = '0'
 
     Workflow = workflow()
     Workflow.workflow_name = workflowName

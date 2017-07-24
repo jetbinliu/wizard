@@ -21,7 +21,7 @@ $(document).ready(function () {
                     },
                     success: function (data) {
                         console.log(data.data);
-                        encrypted_td.text(data.data);
+                        encrypted_td.html('<font color="red">' + data.data + '</font>');
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                         alert(errorThrown);

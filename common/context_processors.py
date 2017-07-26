@@ -25,9 +25,9 @@ leftMenuBtnsSuper = (
          {'name': 'MongoDB备份', 'url': '#', 'class': 'glyphicon glyphicon-wrench'},
      )},
     {'name': '日志管理', 'url': '', 'class': 'glyphicon glyphicon-hdd', 'submenus': (
-        {'name': '日你啊老赵', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
-        {'name': '日你啊老王 ', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
-        {'name': '日你啊李丁', 'url': '/admin/sql/workflow/', 'class': 'glyphicon glyphicon-list-alt'},
+        {'name': '日你啊老赵', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
+        {'name': '日你啊老王 ', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
+        {'name': '日你啊李丁', 'url': '#', 'class': 'glyphicon glyphicon-list-alt'},
     )},
 )
 

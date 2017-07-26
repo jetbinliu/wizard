@@ -91,6 +91,9 @@ def edit(request, user_id):
         user.realname = request.POST.get("realname")
         user.phone = request.POST.get("phone")
         user.role = request.POST.get("role")
+        password = request.POST.get("password")
+        if password:
+            user.password = make_password(password, salt=None, hasher='default')
         user.save()
         return HttpResponseRedirect("/account/index")
     context = {'user': user, 'ROLE_DICT': ROLE_DICT, 'DEPART_DICT': DEPART_DICT}

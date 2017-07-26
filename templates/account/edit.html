@@ -16,8 +16,16 @@
                 </div>
 
                 <div class="control-group">
+                    <label class="control-label">密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge" type="password" name="password">
+                    <p style="display: inline;color: #737373;margin-left: 20px;">
+                        如果置空,则密码不修改.
+                    </p>
+                </div>
+
+                <div class="control-group">
                     <label class="control-label">真实姓名<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" value="{{ user.realname }}" name="realname"/>
+                    <input class="input-xlarge" type="text" value="{{ user.realname }}" name="realname" required/>
                 </div>
 
                 <div class="control-group">
@@ -26,7 +34,7 @@
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label">角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色&nbsp;&nbsp;</label>
+                    <label class="control-label">角&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;色<span style="color:#f00">*</span></label>
                     {% for key, value in ROLE_DICT.items %}
                         <label class="checkbox-inline" style="vertical-align: top">
                             <input type="radio" name="role" value="{{ key }}"

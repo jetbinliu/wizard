@@ -130,7 +130,8 @@ def autoquery(request):
         return render(request, 'error.html', context)
 
     # 获取当前登录用户作为工单发起人
-    engineer = request.session.get('login_username', False)
+    loginUser = request.session.get('login_username')
+    loginUserOb = Users.objects.get(username=loginUser)
 
     # 获取从库连接信息，如果从库不存在则连接到主库查询
     dictSlaveConn = getSlaveConnStr(clusterName)
@@ -147,21 +148,25 @@ def autoquery(request):
     field_names, results = mdb_query(sqlContent, Host, Port, User, Password, cluster_db)
     field_names = field_names if field_names else []
     results = results if results else []
-    # 进行脱敏处理：对用户手机号、身份证号、银行卡号进行加密
-    sensitive_fields = json.loads(conf.get("sqlabout", 'sensitive_fields'))
-    for result in results:
-        for index, item in enumerate(field_names):
-            if item in sensitive_fields:
-                try:
-                    result[index] = 'pbkdf2_sha256$' + prpCryptor.encrypt(result[index]).decode('utf-8')
-                except:
-                    # 处理字段为空值的情况
-                    result[index] = '0'
+
+    # 对特殊人群进行敏感信息脱敏
+    sensitive_roles = json.loads(conf.get("sqlabout", 'sensitive_roles'))
+    if loginUserOb.role in sensitive_roles:
+        # 进行脱敏处理：对用户手机号、身份证号、银行卡号进行加密
+        sensitive_fields = json.loads(conf.get("sqlabout", 'sensitive_fields'))
+        for result in results:
+            for index, item in enumerate(field_names):
+                if item in sensitive_fields:
+                    try:
+                        result[index] = 'pbkdf2_sha256$' + prpCryptor.encrypt(result[index]).decode('utf-8')
+                    except:
+                        # 处理字段为空值的情况
+                        result[index] = '0'
 
     Workflow = workflow()
     Workflow.workflow_name = workflowName
     Workflow.cluster_name = clusterName
-    Workflow.engineer = engineer
+    Workflow.engineer = loginUser
     Workflow.cluster_db = cluster_db
     Workflow.sql_content = sqlContent
     Workflow.field_names = json.dumps(field_names)

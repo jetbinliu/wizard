@@ -94,11 +94,12 @@ def edit(request, user_id):
         password = request.POST.get("password")
         if password:
             loginUser = request.session.get('login_username')
+            loginUserOb = Users.objects.get(username=loginUser)
             # 普通用户只允许修改自己的密码, 管理员才有权限修改其他用户的密码
-            if user.username == loginUser or user.role in (1, 2):
+            if loginUser == user.username or loginUserOb.role in (1, 2):
                 user.password = make_password(password, salt=None, hasher='default')
             else:
-                context = {'errMsg': '密码修改失败，如果密码遗失请联系管理员处理！'}
+                context = {'errMsg': '密码修改失败，权限不够；如果密码遗失请联系管理员处理！'}
                 return render(request, 'error.html', context)
         user.save()
         return HttpResponseRedirect("/account/index")

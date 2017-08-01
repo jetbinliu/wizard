@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+
 {% block content %}
     <div class="container-fluid">
         <div class="row clearfix">
@@ -26,12 +27,9 @@
                                     class="selectpicker show-tick form-control bs-select-hidden" data-name="要查询的集群"
                                     data-placeholder="请选择要查询的集群:" required>
                                 <option value="is-empty" disabled="" selected="selected">请选择要查询的集群:</option>
-                                {% for cluster_name,dbs in dictAllClusterDb.items %}
-                                    <option value="{{ cluster_name }}">{{ cluster_name }}集群 (包含db:
-                                        {% for db in dbs %}
-                                            {{ db }}{% if not forloop.last %},{% endif %}
-                                        {% endfor %}
-                                        )
+                                {% for cluster in clusters %}
+                                    <option value="{{ cluster.cluster_name }}">
+                                        {{ cluster.cluster_name }} (集群地址：{{ cluster.cluster_host }}:{{ cluster.cluster_port }})
                                     </option>
                                 {% endfor %}
                             </select>
@@ -39,10 +37,10 @@
                         <div class="form-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    请选择要查询的数据库(必选)
+                                    <input id="cluster_db" type="hidden" name="cluster_db">
+                                    <span>请选择要查询的数据库(必选)</span>
                                 </div>
-                                    <div class="panel-body">
-
+                                    <div class="panel-body" id="sqlquery_dbs">
                                     </div>
                             </div>
                         </div>
@@ -64,6 +62,7 @@
 
     </div>
 {% endblock content %}
+
 
 {% block scripts %}
     <!--custom scripts-->

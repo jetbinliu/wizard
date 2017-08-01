@@ -11,4 +11,4 @@ class workflow(models.Model):
     cluster_db = models.CharField('库名', max_length=64, default='')
     sql_content = models.TextField('具体sql内容')
     field_names = models.CharField('列名', max_length=2000, default='')
-    query_result = models.TextField('查询结果的JSON格式')
+    query_results = models.TextField('查询结果的JSON格式')

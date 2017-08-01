@@ -3,7 +3,14 @@
 
 
 {% block content %}
-    <h4>单子名称：{{ workflowDetail.workflow_name }}</h4>
+    <h4>工单名称：{{ workflowDetail.workflow_name }}
+        <a href="">{{ workflow.workflow_name }}</a>
+        <a class="btn btn-primary" href="/sqlquery/exportcontentbydesensitization/{{ workflowDetail.id }}/"
+            style="float: right;">
+            <i class="glyphicon glyphicon-download-alt"></i>
+            导出excel
+        </a>
+    </h4>
     <hr>
     <table class="table table-striped table-hover">
         <thead>
@@ -62,7 +69,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for row in workflowDetail.query_result %}
+        {% for row in workflowDetail.query_results %}
             <tr>
             {% for column in row %}
                 <td class="sensitive_fields">{{ column }}</td>

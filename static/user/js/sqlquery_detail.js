@@ -10,7 +10,6 @@ $(document).ready(function () {
             var encrypted_field = encrypted_td.text();
             sessionStorage.setItem("encrypted_field", encrypted_field);
             if (encrypted_field.substr(0,14) == "pbkdf2_sha256$") {
-                console.log(encrypted_field);
                 $.ajax({
                     url: "/sqlquery/desensitization/",
                     type: "post",

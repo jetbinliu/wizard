@@ -1,6 +1,8 @@
 # -*- coding: UTF-8 -*-
 
 import json
+import xlwt
+from io import StringIO, BytesIO
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
@@ -89,6 +91,7 @@ def submitsql(request):
             return render(request, 'error.html', context)
 
     context = {
+        'clusters': clusters,
         'dictAllClusterDb': dictAllClusterDb,
     }
     return render(request, 'sqlquery/submitsql.html', context)
@@ -170,7 +173,7 @@ def autoquery(request):
     Workflow.cluster_db = cluster_db
     Workflow.sql_content = sqlContent
     Workflow.field_names = json.dumps(field_names)
-    Workflow.query_result = json.dumps(results, cls=DateTimeEncoder)
+    Workflow.query_results = json.dumps(results, cls=DateTimeEncoder)
     Workflow.save()
     workflowId = Workflow.id
 
@@ -181,11 +184,54 @@ def detail(request, workflowId):
     # 根据workflowId去db里检索工单
     workflowDetail = get_object_or_404(workflow, pk=workflowId)
     workflowDetail.field_names = json.loads(workflowDetail.field_names)
-    workflowDetail.query_result = json.loads(workflowDetail.query_result)
+    workflowDetail.query_results = json.loads(workflowDetail.query_results)
 
     context = {
         'workflowDetail': workflowDetail,
     }
     return render(request, 'sqlquery/detail.html', context)
+
+
+def ExportContentByDesensitization(request, workflowId):
+    # 根据workflowId去db里检索工单
+    workflowDetail = get_object_or_404(workflow, pk=workflowId)
+    field_names = json.loads(workflowDetail.field_names)
+    query_results = json.loads(workflowDetail.query_results)
+
+    # 获取当前登录用户作为工单发起人
+    loginUser = request.session.get('login_username')
+    loginUserOb = Users.objects.get(username=loginUser)
+
+    # 对导出数据进行敏感信息部分脱敏，包括：用户手机号、身份证号、银行卡号
+    sensitive_fields = json.loads(conf.get("sqlabout", 'sensitive_fields'))
+    for result in query_results:
+        for index, item in enumerate(field_names):
+            if item in sensitive_fields and result[index][0:14] == 'pbkdf2_sha256$':
+                decrypt_res = prpCryptor.decrypt(result[index][14:])
+                result[index] = decrypt_res[:4] + '*'*10 + decrypt_res[-4:]
+
+    # 构造excel工作簿和工作表
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment;filename={0}-{1}.xls'.format(workflowDetail.cluster_db, workflowDetail.id)
+    workbook = xlwt.Workbook(encoding='utf-8')
+    sheet = workbook.add_sheet('table_message', cell_overwrite_ok=True)
+
+    # 插入第一行标题栏
+    for index, item in enumerate(field_names):
+        sheet.write(0, index, item)
+
+    # 写入数据段信息
+    row = 1
+    col = 0
+    for row in range(1, len(query_results)+1):
+        for col in range(0, len(field_names)):
+            sheet.write(row, col, query_results[row-1][col])
+
+    # 输入出到IO流
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    response.write(output.getvalue())
+    return response
 
 

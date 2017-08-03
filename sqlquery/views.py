@@ -198,10 +198,6 @@ def ExportContentByDesensitization(request, workflowId):
     field_names = json.loads(workflowDetail.field_names)
     query_results = json.loads(workflowDetail.query_results)
 
-    # 获取当前登录用户作为工单发起人
-    loginUser = request.session.get('login_username')
-    loginUserOb = Users.objects.get(username=loginUser)
-
     # 对导出数据进行敏感信息部分脱敏，包括：用户手机号、身份证号、银行卡号
     sensitive_fields = json.loads(conf.get("sqlabout", 'sensitive_fields'))
     for result in query_results:
@@ -214,7 +210,7 @@ def ExportContentByDesensitization(request, workflowId):
     response = HttpResponse(content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment;filename={0}-{1}.xls'.format(workflowDetail.cluster_db, workflowDetail.id)
     workbook = xlwt.Workbook(encoding='utf-8')
-    sheet = workbook.add_sheet('table_message', cell_overwrite_ok=True)
+    sheet = workbook.add_sheet('table_export', cell_overwrite_ok=True)
 
     # 插入第一行标题栏
     for index, item in enumerate(field_names):

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+#export LD_LIBRARY_PATH=/usr/local/glibc-2.14/lib:$LD_LIBRARY_PATH
+export LD_PRELOAD=/usr/local/glibc-2.14/lib/libc-2.14.so
 GUNICORN_BIN='/root/.virtualenvs/py3.6/bin/gunicorn'
 CONFIG_FILE='./conf/gunicorn_config.py'
 APPLICATION_WSGI='wizard.wsgi'

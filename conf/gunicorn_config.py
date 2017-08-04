@@ -2,16 +2,17 @@
 
 import os
 import sys
-import gevent
 import multiprocessing
 import logging
 import logging.handlers
 from logging.handlers import WatchedFileHandler
 
+
 bind = "0.0.0.0:8000"
 user = "nobody"
 workers = multiprocessing.cpu_count() * 2 + 1
-worker_class = "gevent"
+#worker_class = "gevent"
+worker_class = "egg:meinheld#gunicorn_worker"
 proc_name = "gunicorn.proc"
 backlog = 2048
 timeout = 1200

@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label class="control-label" style="vertical-align:top;margin-right: 2%;">执行语句</label>
                             <textarea id="sql_content" name="sql_content" class="form-control" data-name="SQL内容"
-                                      placeholder="请在此提交SQL，请以分号结尾。例如：use test; create table t1(id int)engine=innodb;"
+                                      placeholder="请在此提交SQL，请以分号结尾。例如：create table t1(id int)engine=innodb;"
                                       rows=18
                                       required
                                       style="display: inline;width: 86%;margin: auto">{{ sqlContent }}</textarea>
@@ -59,21 +59,6 @@
                                    data-name="上线工单名称" placeholder="请输入上线工单名称，如:XX项目会员功能建表" required>
                         </div>
                         <div class="form-group">
-                            <select id="cluster_name" name="cluster_name"
-                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="要上线的集群"
-                                    data-placeholder="请选择要上线的集群:" required>
-                                <option value="is-empty" disabled="" selected="selected">请选择要上线的集群:</option>
-                                {% for cluster_name,dbs in dictAllClusterDb.items %}
-                                    <option value="{{ cluster_name }}">{{ cluster_name }}集群 (包含db：
-                                        {% for db in dbs %}
-                                            {{ db }}{% if not forloop.last %},{% endif %}
-                                        {% endfor %}
-                                        )
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <select id="is_backup" name="is_backup"
                                     class="selectpicker show-tick form-control bs-select-hidden" data-name="是否选择备份"
                                     data-placeholder="请选择是否要备份:" required>
@@ -84,8 +69,8 @@
                         </div>
                         <div class="form-group">
                             <select id="review_man" name="review_man"
-                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="审核人"
-                                    data-placeholder="请选择RD审核人:" required>
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="主审核人"
+                                    data-placeholder="请选择RD主审核人:" required>
                                 <option value="is-empty" disabled="" selected="selected">请选择主审核人:</option>
                                 {% for man in reviewMen %}
                                     {% if not man.username == 'admin' %}
@@ -94,6 +79,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <!--div class="form-group">
+                            <select id="sub_review_man" name="sub_review_man"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="副审核人"
+                                    data-placeholder="请选择RD副审核人:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择副审核人:</option>
+                                {% for man in sub_review_man %}
+                                    {% if not man.username == 'admin' %}
+                                        <option value="{{ man.username }}">{{ man.username }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div-->
                         <div class="form-group">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -115,6 +112,28 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select id="cluster_name" name="cluster_name"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="要上线的集群"
+                                    data-placeholder="请选择要上线的集群:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择要上线的集群:</option>
+                                {% for cluster in clusters %}
+                                    <option value="{{ cluster.cluster_name }}">
+                                        {{ cluster.cluster_name }} (集群地址：{{ cluster.cluster_host }}:{{ cluster.cluster_port }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <input id="cluster_db" type="hidden" name="cluster_db" data-name="要操作的数据库" required>
+                                    <span>请选择要操作的数据库(必选)</span>
+                                </div>
+                                    <div class="panel-body" id="sqlquery_dbs">
+                                    </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -141,4 +160,5 @@
     <!--custom scripts-->
     <script src="{% static 'user/js/autoreview.js' %}"></script>
     <script src="{% static 'user/js/submitsql.js' %}"></script>
+    <script src="{% static 'user/js/sqlquery.js' %}"></script>
 {% endblock %}

@@ -48,9 +48,9 @@ function fromDbGetTables_0(element) {
             success: function (data) {
                 element_li.append("<ul style='margin-left: 0px;padding-left: 0px'>");
                 for(var i=0; i<data.data.length; i++){
-                    var tb_name = data.data[i];
-                    console.log(tb_name);
-                    element_li.children("ul").append("<li class=\"sqlquery_tb\" style=\"list-style-type : none;margin-left: 15px\">" + "<a href=\"#\"><i class=\"glyphicon glyphicon-list-alt\"></i>&nbsp;</a>" + "<span>" + tb_name + "</span>" + "</li>");
+                    var tb_name = data.data[i][0];
+                    var tb_comment = data.data[i][1].substr(0,6);
+                    element_li.children("ul").append("<li class=\"sqlquery_tb\" style=\"list-style-type : none;margin-left: 15px\">" + "<a href=\"#\"><i class=\"glyphicon glyphicon-list-alt\"></i>&nbsp;</a>" + "<span>" + tb_name + " " + tb_comment + "</span>" + "</li>");
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {

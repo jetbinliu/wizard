@@ -26,6 +26,10 @@ class Users(AbstractUser):
     # 角色
     role = models.IntegerField(blank=True,default=5)
 
+    class Meta:
+        db_table = "account_users"
+
+
 class Department(models.Model):
     # 部门名称
     depart_name = models.CharField(max_length=50, blank=True)

@@ -47,9 +47,10 @@ def getTablesFromDb(request):
         table_schema = request.POST.get("table_schema")
 
     cursor = connection.cursor()
-    cursor.execute("select table_name from dbconfig_mysql_cluster_metadata where table_schema=%s", (table_schema,))
+    cursor.execute("select table_name,table_comment from dbconfig_mysql_cluster_metadata where table_schema=%s", (table_schema,))
     cursor.close()
-    tbs = [tb[0] for tb in cursor.fetchall()]
+    tbs = cursor.fetchall()
+    print(tbs)
 
     result = {'status':0, 'msg':'ok', 'data':tbs}
     return HttpResponse(json.dumps(result), content_type='application/json')

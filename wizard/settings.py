@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
+    'authority',
+    'guardian',
     'common',
     'sqlquery',
     'sqlreview',
@@ -117,6 +119,12 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # django默认的backend
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -176,3 +184,6 @@ LOGGING = {
 
 #扩展django admin里users字段用到，指定了account/models.py里的class Users
 AUTH_USER_MODEL="account.Users"
+
+# 登录页URL
+LOGIN_URL = "/login"

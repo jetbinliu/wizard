@@ -133,7 +133,8 @@ def submitsql(request):
        return render(request, 'error.html', context)
 
     context = {
-        'dictAllClusterDb': dictAllClusterDb,
+        'clusters': clusters,
+        # 'dictAllClusterDb': dictAllClusterDb,
         'reviewMen': reviewMen
     }
     return render(request, 'sqlreview/submitsql.html', context)
@@ -145,11 +146,13 @@ def autoreview(request):
     sqlContent = request.POST['sql_content']
     workflowName = request.POST['workflow_name']
     clusterName = request.POST['cluster_name']
+    clusterDB = request.POST['cluster_db']
     isBackup = request.POST['is_backup']
     reviewMan = request.POST['review_man']
     subReviewMan = request.POST.get('sub_review_man', '')
 
     reviewMans = [reviewMan, subReviewMan]
+    sqlContent = 'use ' + clusterDB + ';' + sqlContent
 
     # 服务器端参数验证
     if sqlContent is None or workflowName is None or clusterName is None or isBackup is None or reviewMan is None:
@@ -164,7 +167,7 @@ def autoreview(request):
     dictConn = getMasterConnStr(clusterName)
     result = inceptionDao.sqlautoReview(dictConn, sqlContent)
     if result is None or len(result) == 0:
-        context = {'errMsg': 'inception返回的结果集为空！可能是SQL语句有语法错误'}
+        context = {'errMsg': '返回的结果集为空！可能是SQL语句有语法错误'}
         return render(request, 'error.html', context)
     # 要把result转成JSON存进数据库里，方便SQL单子详细信息展示
     jsonResult = json.dumps(result)

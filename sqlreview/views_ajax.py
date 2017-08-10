@@ -38,7 +38,7 @@ def simplecheck(request):
     result = inceptionDao.sqlautoReview(dictConn, sqlContent)
     if result is None or len(result) == 0:
         finalResult['status'] = 1
-        finalResult['msg'] = 'inception返回的结果集为空！可能是SQL语句有语法错误'
+        finalResult['msg'] = '返回的结果集为空！可能是SQL语句有语法错误'
         return HttpResponse(json.dumps(finalResult), content_type='application/json')
     # 要把result转成JSON存进数据库里，方便SQL单子详细信息展示
     finalResult['data'] = result

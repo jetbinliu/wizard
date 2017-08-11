@@ -93,3 +93,7 @@ class mysql_cluster_metadata(models.Model):
     create_statement = models.TextField(default='')
     create_options = models.CharField(max_length=255, default='')
     table_comment = models.CharField(max_length=2048, default='')
+
+    class Meta:
+        # db_table = 'metadata'
+        unique_together = ('cluster_port', 'table_schema', 'table_name')

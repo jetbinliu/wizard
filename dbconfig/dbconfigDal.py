@@ -110,7 +110,7 @@ def setClusterStatusByHostPort(cluster_type,host,port,stat):
         return {'status': 1}
 
 
-# 采集集群元数据
+# 采集集群元数据,需要能访问目标实例information_schema库
 def fetch_mysql_cluster_metadata():
     clusters = getAllMySQLInfo(cluster_role=1, flag='online')
     for cluster in clusters:
@@ -132,7 +132,11 @@ def fetch_mysql_cluster_metadata():
                      "create_options,table_comment from tables where table_schema not in {}".format(
             ('mysql', 'sys', 'mondmm', 'test', 'information_schema', 'performance_schema'),)
         cluster_db = "information_schema"
-        _, results = mdb_query(sqlContent, Host, Port, User, Password, cluster_db, True)
+        try:
+            _, results = mdb_query(sqlContent, Host, Port, User, Password, cluster_db, True)
+        except Exception as e:
+            print("Mysql Error : %s" % e)
+            return None
         # 遍历然后查询建表语句
         for result in results:
             table_schema = result.get('table_schema')
@@ -140,7 +144,7 @@ def fetch_mysql_cluster_metadata():
             _, res = mdb_query("show create table {}".format(table_name), Host, Port, User, Password, table_schema)
             create_statement = pymysql.escape_string(res[0][1])
             result['create_statement'] = create_statement
-            # 元数据入库,如果存在就更新，如果不存在就插入(cluster_port, table_schema, table_name三个字段添加unique约束)
+            # 元数据入库,如果存在就更新，如果不存在就插入.   (cluster_port, table_schema, table_name三个字段添加unique约束)
             metadatas = mysql_cluster_metadata.objects.filter(Q(cluster_port=cluster_port) & Q(table_schema=table_schema) & Q(table_name=table_name))
             if metadatas:
                 metadata = metadatas[0]

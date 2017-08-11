@@ -6,7 +6,6 @@ from django.db import connection
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLInfo, getMasterConnStr, getSlaveConnStr, mysql_cluster_metadata
 from common.aes_decryptor import Prpcrypt
 
 prpCryptor = Prpcrypt()  # 初始化
@@ -33,8 +32,8 @@ def getDbsFromClusterName(request):
 
     cursor = connection.cursor()
     cursor.execute("select distinct table_schema from dbconfig_mysql_cluster_metadata where cluster_name=%s", (cluster_name,))
-    cursor.close()
     dbs = [db[0] for db in cursor.fetchall()]
+    cursor.close()
 
     result = {'status':0, 'msg':'ok', 'data':dbs}
     return HttpResponse(json.dumps(result), content_type='application/json')
@@ -48,9 +47,8 @@ def getTablesFromDb(request):
 
     cursor = connection.cursor()
     cursor.execute("select table_name,table_comment from dbconfig_mysql_cluster_metadata where table_schema=%s", (table_schema,))
-    cursor.close()
     tbs = cursor.fetchall()
-    print(tbs)
+    cursor.close()
 
     result = {'status':0, 'msg':'ok', 'data':tbs}
     return HttpResponse(json.dumps(result), content_type='application/json')

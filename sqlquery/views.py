@@ -6,6 +6,7 @@ from io import StringIO, BytesIO
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views.decorators.cache import cache_page
 
 from account.models import Users
 from dbconfig.dbconfigDal import getMySQLClusterDbs, getAllMySQLInfo, getMasterConnStr, getSlaveConnStr
@@ -77,22 +78,20 @@ def submitsql(request):
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'error.html', context)
 
-    # cluster_role 0 为主库, 登录获取databaase列表
-    dictAllClusterDb = {}
+    # 查看数据库主库是否存活
     for cluster in clusters:
         try:
-            dbs = getMySQLClusterDbs(
+            mdb_query(
+                "select user()",
                 cluster.cluster_host, cluster.cluster_port,
                 cluster.cluster_user, cluster.cluster_password
             )
-            dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
-            context = {'errMsg': u'连接到从库 %s:%d 失败: %s' % (cluster.cluster_host, cluster.cluster_port, e)}
+            context = {'errMsg': u'连接到数据库 %s:%d 失败: %s' % (cluster.cluster_host, cluster.cluster_port, e)}
             return render(request, 'error.html', context)
 
     context = {
         'clusters': clusters,
-        'dictAllClusterDb': dictAllClusterDb,
     }
     return render(request, 'sqlquery/submitsql.html', context)
 
@@ -180,6 +179,7 @@ def autoquery(request):
     return HttpResponseRedirect('/sqlquery/detail/' + str(workflowId) + '/')
 
 # 展示SQL工单详细内容，以及可以人工审核，审核通过即可执行
+@cache_page(60 * 15)    # 秒数，这里指缓存 15 分钟
 def detail(request, workflowId):
     # 根据workflowId去db里检索工单
     workflowDetail = get_object_or_404(workflow, pk=workflowId)

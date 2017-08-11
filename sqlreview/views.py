@@ -14,6 +14,7 @@ from .inceptionDal import InceptionDao
 from .models import workflow, WORKFLOW_STATUS
 from lib.configgetter import Configuration
 from lib.util import getNow, _getDetailUrl
+from lib.mysqllib import mdb_query
 
 conf = Configuration("conf/global.conf")
 inceptionDao = InceptionDao()
@@ -104,25 +105,16 @@ def submitsql(request):
        context = {'errMsg': '在线MySQL集群数为0, 可能后端数据没有配置集群！'}
        return render(request, 'error.html', context)
 
-    # # 获取所有集群名称
-    # listAllClusterName = [cluster.cluster_name for cluster in clusters]
-    # # 转换为集合（间接去重）
-    # setAllClusterName = set(listAllClusterName)
-    # if len(setAllClusterName) < len(listAllClusterName):
-    #     context = {'errMsg': '存在两个集群名称一样的集群，请修改数据库'}
-    #     return render(request, 'error.html', context)
-
-    # cluster_role 1 为主库, 登录获取databaase列表
-    dictAllClusterDb = {}
+    # 查看数据库主库是否存活
     for cluster in clusters:
         try:
-            dbs = getMySQLClusterDbs(
+            mdb_query(
+                "select user()",
                 cluster.cluster_host, cluster.cluster_port,
                 cluster.cluster_user, cluster.cluster_password
             )
-            dictAllClusterDb[cluster.cluster_name] = dbs
         except Exception as e:
-            context = {'errMsg': u'连接到主库 %s:%d 失败: %s' % (cluster.cluster_host, cluster.cluster_port, e)}
+            context = {'errMsg': u'连接到数据库 %s:%d 失败: %s' % (cluster.cluster_host, cluster.cluster_port, e)}
             return render(request, 'error.html', context)
 
     # 获取所有审核人(超级管理员、管理员、DBA、leader、项目管理)，当前登录用户不可以审核自己的工单

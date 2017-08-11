@@ -16,10 +16,15 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#sqlquery_dbs").append("<ul style='margin-left: 0px;padding-left: 0px'>");
-                for(var i=0; i<data.data.length; i++){
-                    var db_name = data.data[i];
-                    $("#sqlquery_dbs ul").append("<li class=\"sqlquery_db\" style=\"list-style-type : none\">" + '<a href="#" onclick="return fromDbGetTables_0(this);"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;</a>' + "<a href=\"#\" onclick=\"return fromDbGetTables_1(this);\">" + db_name + "</a>" + "</li>");
+                if (data.data.length) {
+                    for(var i=0; i<data.data.length; i++){
+                        var db_name = data.data[i];
+                        $("#sqlquery_dbs ul").append("<li class=\"sqlquery_db\" style=\"list-style-type : none\">" + '<a href="#" onclick="return fromDbGetTables_0(this);"><i class="glyphicon glyphicon-folder-close"></i>&nbsp;</a>' + "<a href=\"#\" onclick=\"return fromDbGetTables_1(this);\">" + db_name + "</a>" + "</li>");
+                    }
+                } else {
+                    $("#cluster_db").next().html("<font color=\"red\"><b>无法获取数据库信息，请检查wizard访问集群权限。</b></font>");
                 }
+
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(errorThrown);

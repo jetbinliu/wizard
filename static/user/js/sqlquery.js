@@ -3,6 +3,7 @@
  */
 $(document).ready(function () {
     $("#cluster_name").change(function () {
+         $("#cluster_db").next().html("请选择要操作的数据库(必选)");
          $("#sqlquery_dbs").empty();
         var cluster_name = $(this).val();
         var html = "";

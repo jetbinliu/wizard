@@ -204,7 +204,7 @@ def ExportContentByDesensitization(request, workflowId):
         for index, item in enumerate(field_names):
             if item in sensitive_fields and result[index][0:14] == 'pbkdf2_sha256$':
                 decrypt_res = prpCryptor.decrypt(result[index][14:])
-                result[index] = decrypt_res[:4] + '*'*10 + decrypt_res[-4:]
+                result[index] = decrypt_res[:2] + '*'*10 + decrypt_res[-4:]
 
     # 构造excel工作簿和工作表
     response = HttpResponse(content_type='application/vnd.ms-excel')

@@ -1,4 +1,12 @@
 $(document).ready(function (){
+    // 执行按钮点击状态变化
+    $("#btnExecute").click(function(){
+        $(this).button('loading').delay(2000).queue(function() {
+            $(this).button('reset');
+            $(this).dequeue();
+        });
+    });
+
     // 如果正在执行修改动作的当前登录用户，不是发起人，则异常.
     $("#reject_modification").click(function () {
         var loginUser = $("#loginUser").text().split('(')[0];

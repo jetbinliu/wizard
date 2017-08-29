@@ -4,9 +4,10 @@ import re
 import json
 import MySQLdb
 
+from django.db.models import Q
 
 from .models import workflow
-from dbconfig.models import cluster_config
+from dbconfig.models import mysql_cluster_config
 from common.aes_decryptor import Prpcrypt
 from lib.configgetter import Configuration
 from lib.mysqllib import mdb
@@ -38,26 +39,18 @@ class InceptionDao(object):
                 r"([\s\S]*)drop(\s+)database(\s+.*)|([\s\S]*)drop(\s+)table(\s+.*)|([\s\S]*)truncate(\s+)partition(\s+.*)|([\s\S]*)truncate(\s+)table(\s+.*)",
                 sqlContent.lower()):
             return ((
-                    '', '', 2, '', '不能包含【DROP DATABASE】|【DROP TABLE】|【TRUNCATE PARTITION】|【TRUNCATE TABLE】关键字！', '', '',
-                    '', '', ''),)
+                    '', '', 2, '驳回高危SQL', '不能包含【DROP DATABASE】|【DROP TABLE】|【TRUNCATE PARTITION】|【TRUNCATE TABLE】关键字！', sqlContent, '0',
+                    '', '', '0'),)
         else:
             return None
 
-    def sqlautoReview(self, sqlContent, clusterName, isBackup='否'):
+    def sqlautoReview(self,dictConn, sqlContent):
         '''
         将sql交给inception进行自动审核，并返回审核结果。
         '''
-        listMasters = cluster_config.objects.filter(cluster_name=clusterName)
-        if len(listMasters) != 1:
-            print("Error: 集群配置返回为0")
-        masterHost = json.loads(listMasters[0].cluster_hosts)[0]
-        masterPort = listMasters[0].cluster_port
-        masterUser = listMasters[0].cluster_user
-        masterPassword = self.prpCryptor.decrypt(listMasters[0].cluster_password)
-
         # 这里无需判断字符串是否以；结尾，直接抛给inception enable check即可。
         # if sqlContent[-1] != ";":
-        # sqlContent = sqlContent + ";"
+        #   sqlContent = sqlContent + ";"
 
         if conf.has_option("INCEPTION", 'CRITICAL_DDL_ON_OFF'):
             if conf.get("INCEPTION", 'CRITICAL_DDL_ON_OFF').lower() == "on":
@@ -71,7 +64,7 @@ class InceptionDao(object):
                 sql = "/*--user=%s;--password=%s;--host=%s;--enable-check=1;--port=%s;*/\
                   inception_magic_start;\
                   %s\
-                  inception_magic_commit;" % (masterUser, masterPassword, masterHost, str(masterPort), sqlContent)
+                  inception_magic_commit;" % (dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']), sqlContent)
                 result = mdb(sql, self.inception_host, self.inception_port, '', '', '')
         return result
 
@@ -80,7 +73,7 @@ class InceptionDao(object):
         将sql交给inception进行最终执行，并返回执行结果。
         '''
         strBackup = ""
-        if workflowDetail.is_backup == '1':
+        if workflowDetail.is_backup == 1:
             strBackup = "--enable-remote-backup;"
         else:
             strBackup = "--disable-remote-backup;"
@@ -90,9 +83,9 @@ class InceptionDao(object):
              inception_magic_start;\
              %s\
              inception_magic_commit;" % (
-        dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
-        workflowDetail.sql_content)
-        splitResult = self._fetchall(sqlSplit, self.inception_host, self.inception_port, '', '', '')
+        dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']), workflowDetail.sql_content)
+        splitResult = mdb(sqlSplit, self.inception_host, self.inception_port, '', '', '')
+        print(splitResult)
 
         tmpList = []
         # 对于split好的结果，再次交给inception执行.这里无需保持在长连接里执行，短连接即可.
@@ -102,20 +95,21 @@ class InceptionDao(object):
                     inception_magic_start;\
                     %s\
                     inception_magic_commit;" % (
-            dictConn['masterUser'], dictConn['masterPassword'], dictConn['masterHost'], str(dictConn['masterPort']),
+            dictConn['User'], dictConn['Password'], dictConn['Host'], str(dictConn['Port']),
             strBackup, sqlTmp)
+            print(sqlExecute)
 
-            executeResult = self._fetchall(sqlExecute, self.inception_host, self.inception_port, '', '', '')
+            executeResult = mdb(sqlExecute, self.inception_host, self.inception_port, '', '', '')
             tmpList.append(executeResult)
 
         # 二次加工一下，目的是为了和sqlautoReview()函数的return保持格式一致，便于在detail页面渲染.
-        finalStatus = "已正常结束"
+        finalStatus = 8
         finalList = []
         for splitRow in tmpList:
             for sqlRow in splitRow:
                 # 如果发现任何一个行执行结果里有errLevel为1或2，并且stagestatus列没有包含Execute Successfully字样，则判断最终执行结果为有异常.
                 if (sqlRow[2] == 1 or sqlRow[2] == 2) and re.match(r"\w*Execute Successfully\w*", sqlRow[3]) is None:
-                    finalStatus = "执行有异常"
+                    finalStatus = 7
                 finalList.append(list(sqlRow))
 
         return (finalStatus, finalList)
@@ -125,7 +119,7 @@ class InceptionDao(object):
         listExecuteResult = json.loads(workflowDetail.execute_result)
         listBackupSql = []
         for row in listExecuteResult:
-            # 获取backup_dbname
+            # 获取备份目标库名
             if row[8] == 'None':
                 continue;
             backupDbName = row[8]
@@ -133,14 +127,14 @@ class InceptionDao(object):
             opidTime = sequence.replace("'", "")
             sqlTable = "select tablename from %s.$_$Inception_backup_information$_$ where opid_time='%s';" % (
             backupDbName, opidTime)
-            listTables = self._fetchall(sqlTable, self.inception_remote_backup_host, self.inception_remote_backup_port,
+            listTables = mdb(sqlTable, self.inception_remote_backup_host, self.inception_remote_backup_port,
                                         self.inception_remote_backup_user, self.inception_remote_backup_password, '')
             if listTables is None or len(listTables) != 1:
                 print("Error: returned listTables more than 1.")
 
             tableName = listTables[0][0]
             sqlBack = "select rollback_statement from %s.%s where opid_time='%s'" % (backupDbName, tableName, opidTime)
-            listBackup = self._fetchall(sqlBack, self.inception_remote_backup_host, self.inception_remote_backup_port,
+            listBackup = mdb(sqlBack, self.inception_remote_backup_host, self.inception_remote_backup_port,
                                         self.inception_remote_backup_user, self.inception_remote_backup_password, '')
             if listBackup is not None and len(listBackup) != 0:
                 for rownum in range(len(listBackup)):

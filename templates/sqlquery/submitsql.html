@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row clearfix">
+        <form id="form-submitsql" action="/sqlquery/autoquery/" method="post" class="form-horizontal" role="form">
+            {% csrf_token %}
+            <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
+
+                <fieldset>
+                    <div class="col-md-8 column">
+                            <textarea id="sql_content" name="sql_content" class="form-control" data-name="SQL内容"
+                                      placeholder="请在此提交SQL，请以分号结尾。例如：select userid,username,sex from users limit 500;"
+                                      rows=18 required>{{ sqlContent }}</textarea>
+                    </div>
+
+                    <div class="col-md-4 column">
+                        <div class="form-group">
+                            <input id="workflow_name" type="text" name="workflow_name"
+                                   value="{{ workflowDetail.workflow_name }}" class="form-control"
+                                   data-name="查询工单名称" placeholder="请输入查询工单名称，如:XX项目会员功能查询表" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="cluster_name" name="cluster_name"
+                                    class="selectpicker show-tick form-control bs-select-hidden" data-name="要查询的集群"
+                                    data-placeholder="请选择要查询的集群:" required>
+                                <option value="is-empty" disabled="" selected="selected">请选择要查询的集群:</option>
+                                {% for cluster in clusters %}
+                                    <option value="{{ cluster.cluster_name }}">
+                                        {{ cluster.cluster_name }} (集群地址：{{ cluster.cluster_host }}:{{ cluster.cluster_port }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <input id="cluster_db" type="hidden" name="cluster_db" data-name="要操作的数据库" required>
+                                    <span>请选择要操作的数据库(必选)</span>
+                                </div>
+                                    <div class="panel-body" id="sqlquery_dbs">
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="reset" class="btn btn-warning">清空选项</button>
+                            <!-- <button type="submit" class="btn btn-primary">SQL提交</button> -->
+                            <input id="btn-submitsql" type="button" class="btn btn-primary" value="SQL提交"/>
+                        </div>
+                    </div>
+                </fieldset>
+        </form>
+        </div>
+
+        <div id="inception-result" style="display:none;" class="row clearfix">
+            <br/>
+            <div id="inception-result-col" class="col-md-12" style="width: 100%">
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+    <!--custom scripts-->
+    <script src="{% static 'user/js/sqlquery.js' %}"></script>
+    <script src="{% static 'user/js/submitsql.js' %}"></script>
+{% endblock %}

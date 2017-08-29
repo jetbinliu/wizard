@@ -20,11 +20,12 @@ function cancel_success(data){
 }
 
 
-function error(data){
-	alert('something is error!');
+function error(XMLHttpRequest, textStatus, errorThrown){
+	// alert('something is error!');
+	alert(errorThrown);
 }
 //用来请求网页显示在固定位置
-//　flag: 是否时左侧的主菜单
+//　flag: 是否是左侧的主菜单
 function executeMenu(element,flag){
     var url = $(element).attr("href");
     if(flag){
@@ -42,16 +43,23 @@ function executeMenu(element,flag){
 	//$("title").html(base + '-' + $($(element).children()[1]).html().trim());
     }
 
-
     jQuery.ajax({
         type: 'GET',
         url: url,
+		dataType: 'html',
+        async: true,
         success: success,
-        error:error,
-        dataType: 'html',
-        async:false
+		error: error,
     });
     return false;
+}
+
+// 普通跳转normalRedirect
+function normalRedirect(url='') {
+	if (url == '') {
+		url = sessionStorage.getItem('hide_history_url');
+	}
+	$(location).attr('href', url);
 }
 
 //处理刷新页面，json字符串包含statusCode，url，message信息
@@ -61,8 +69,14 @@ function httpRedirect(data){
 	var message = data.message;
 	if (statusCode == 200){
 		httpRedirectAjax(url);
+	} else {
+    	// alert(message);
+		$('#alert-modal-body').html(data.message);
+		$('#alert-modal').modal({
+			keyboard: true
+		});
 	}
-    alert(message);
+
 }
 
 //执行删除或批量删除
@@ -77,10 +91,10 @@ function executeDelete(obj,ids){
 		type: 'POST',
 		url: url,
 		data:{'ids':ids},
+		dataType: 'json',
 		success:httpRedirect,
 		error: error,
-		dataType: 'json',
-		async:false
+		// async:false
 	});
 	return false;
 }
@@ -92,7 +106,7 @@ function httpRedirectAjax(url){
 		success: cancel_success,
 		error:error,
 		dataType: 'html',
-		async:false
+		// async:false
 	});
 	return false;
 }
@@ -106,7 +120,7 @@ function backHistoryURL(){
 		success: success,
 		error:error,
 		dataType: 'html',
-		async:false
+		async:true,
 	});
 	return false;
 }
@@ -116,7 +130,7 @@ function validateerror(){
 //处理form表单,返回一个json字符串给httpRedirect函数进行重定向
 function validateCallback(form){
 	//校验失败，直接返回
-	if(!$(form).valid()){
+	if(!$(form).validate()){
 		alert("表单校验失败，无法提交!");
 		return false;
 	}
@@ -124,11 +138,11 @@ function validateCallback(form){
 	jQuery.ajax({
 		type: 'POST',
 		url: url,
+		dataType: 'json',
 		data:$(form).serializeArray(),
 		success: httpRedirect,
 		error:validateerror,
-		dataType: 'json',
-		async:false
+		// async:false
 	});
 	return false;
 }

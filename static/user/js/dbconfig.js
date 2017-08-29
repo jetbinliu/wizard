@@ -18,29 +18,29 @@ function dig_success(data){
     $("#dig-info").html(data);
 }
 
-function clusterStatSet(port){
-    var id = 'clusterid_' + port;
+function clusterStatSet(cluster_type, host, port){
+    var id = 'clusterid_' + host + '_' + port;
     var clusterid = document.getElementById(id).getAttribute("value");
     if(clusterid == 1){
-        cluster_offline(port)
+        cluster_offline(cluster_type, host, port)
     }else{
-        cluster_online(port)
+        cluster_online(cluster_type, host, port)
     }
 }
 
-function cluster_offline(port){
+function cluster_offline(cluster_type, host, port){
     var url = "/dbconfig/setclusterstatus/";
-    data = {"port":port,"stat":0}
+    data = {"cluster_type":cluster_type,"host":host,"port":port,"stat":0}
     jQuery.ajax({
         type: 'POST',
         url: url,
         data: data,
         dataType: 'json',
-        async:false,
+        async:true,
         success: function(retdata){
             if(retdata["status"] == 0)
             {
-                var id = 'clusterid_' + port;
+                var id = 'clusterid_' + host + '_' + port;
                 var clusterid = document.getElementById(id);
                 clusterid.setAttribute("class", "cur_select");
                 clusterid.setAttribute("class", "switchoff");
@@ -54,19 +54,19 @@ function cluster_offline(port){
 
 }
 
-function cluster_online(port){
+function cluster_online(cluster_type, host, port){
     var url = "/dbconfig/setclusterstatus/";
-    data = {"port":port,"stat":1}
+    data = {"cluster_type":cluster_type,"host":host,"port":port,"stat":1}
     jQuery.ajax({
         type: 'POST',
         url: url,
         data: data,
         dataType: 'json',
-        async:false,
+        async:true,
         success:function(retdata){
             if(retdata["status"] == 0)
             {
-                var id = 'clusterid_' + port;
+                var id = 'clusterid_' + host + '_' + port;
                 var clusterid = document.getElementById(id);
                 clusterid.setAttribute("class", "cur_select");
                 clusterid.setAttribute("class", "switchon");

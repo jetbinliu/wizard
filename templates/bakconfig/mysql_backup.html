@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="nav nav-tabs">
+        {% if navStatus == 'all' %}
+            <li class="active">
+                {% else %}
+            <li>
+        {% endif %}
+        <a href="#">全部备份</a>
+        </li>
+
+        {% if navStatus == 'waitingforme' %}
+            <li class="active">
+                {% else %}
+            <li>
+        {% endif %}
+        <a href="#">备份成功</a>
+        </li>
+
+        {% if navStatus == 'finish' %}
+            <li class="active">
+                {% else %}
+            <li>
+        {% endif %}
+        <a href="#">备份失败</a>
+        </li>
+
+        {% if navStatus == 'autoreviewwrong' %}
+            <li class="active">
+                {% else %}
+            <li>
+        {% endif %}
+        <a href="/allworkflow/?pageNo=0&navStatus=autoreviewwrong">传输到备份服务器中</a>
+        </li>
+
+    </ul>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th>
+                集群HOST
+            </th>
+            <th>
+                集群PORT
+            </th>
+             <th>
+                目标机器
+            </th>
+            <th>
+                存储路径
+            </th>
+            <th>
+                备份状态
+            </th>
+            <th>
+                开始时间
+            </th>
+            <th>
+                结束时间
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for workflow in listWorkflow %}
+            <tr>
+                <td>
+                    {{ workflow.id }}
+                </td>
+                <td>
+                    <a href="/sqlreview/detail/{{ workflow.id }}/">{{ workflow.workflow_name }}</a>
+                </td>
+                <td>
+                    {{ workflow.engineer }}
+                </td>
+                <td>
+                    {% for key, value in WORKFLOW_STATUS.items %}
+                        {% if key == workflow.status %}
+                            {{ value }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ workflow.create_time | date:"Y-m-d H:i:s"}}
+                </td>
+                <td>
+                    {{ workflow.cluster_name }}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td>暂无工单.</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    <div style="text-align:center;">
+        <ul class="pagination" style="display:inline-block;">
+            <li>
+                <a href="/allworkflow/?pageNo={{ pageNo|add:"-1" }}&navStatus={{ navStatus }}">前一页</a>
+            </li>
+            <li class="active">
+                <a href="/allworkflow/?pageNo={{ pageNo|add:"0" }}&navStatus={{ navStatus }}">{{ pageNo|add:"1" }}</a>
+            </li>
+            {% if listWorkflow|length >= PAGE_LIMIT %}
+                <li>
+                    <a href="/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">{{ pageNo|add:"2" }}</a>
+                </li>
+                <li>
+                    <a href="/allworkflow/?pageNo={{ pageNo|add:"2" }}&navStatus={{ navStatus }}">{{ pageNo|add:"3" }}</a>
+                </li>
+                <li>
+                    <a href="/allworkflow/?pageNo={{ pageNo|add:"3" }}&navStatus={{ navStatus }}">{{ pageNo|add:"4" }}</a>
+                </li>
+                <li>
+                    <a href="/allworkflow/?pageNo={{ pageNo|add:"4" }}&navStatus={{ navStatus }}">{{ pageNo|add:"5" }}</a>
+                </li>
+                <li>
+                    <a href="/allworkflow/?pageNo={{ pageNo|add:"1" }}&navStatus={{ navStatus }}">后一页</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock content %}

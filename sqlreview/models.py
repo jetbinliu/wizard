@@ -18,16 +18,16 @@ class workflow(models.Model):
     reviewok_time = models.DateTimeField('人工审核通过的时间', null=True, blank=True)
     sql_content = models.TextField('具体sql内容')
     execute_result = models.TextField('执行结果的JSON格式')
-    notes = models.CharField('备注 JSON格式', max_length=50, default='{}')  # 实际通过、驳回工单审核人用户名及其它信息，格式 {'reviewed_man':xxx, 'rejected_man':xxx, 'other':xxoo}
+    notes = models.CharField('备注 JSON格式', max_length=100, default='{}')  # 实际通过、驳回工单审核人用户名及其它信息，格式 {'reviewed_man':xxx, 'rejected_man':xxx, 'other':xxoo}
 
 # 工单状态
 WORKFLOW_STATUS = {
     1: '自动审核中',
     2: '自动审核不通过',
-    3: '等待审核人审核',
-    4: '发起人终止',
+    3: '等待审核人审核', 31: '等待副审核人审核', 32: '等待DBA审核',
+    4: '发起人撤回',
     5: '审核人驳回',
-    6: '执行中',
+    6: 'Normal执行中', 61: 'OSC执行中',
     7: '执行有异常',
     8: '已正常结束',
 }

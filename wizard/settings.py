@@ -41,10 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'account',
+    'authority',
+    'guardian',
     'common',
+    'sqlquery',
     'sqlreview',
     'dbconfig',
     'conf',
+    'bakconfig',
 ]
 
 MIDDLEWARE = [
@@ -88,9 +92,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'wizard',
-        'USER': 'superdba',
-        'PASSWORD': 'guzaneyR@cj7M6m',
-        'HOST': '192.168.37.10',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '10.1.1.131',
         'PORT': '3306',
     }
 }
@@ -113,6 +117,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # django默认的backend
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 
 # Internationalization
@@ -174,3 +184,6 @@ LOGGING = {
 
 #扩展django admin里users字段用到，指定了account/models.py里的class Users
 AUTH_USER_MODEL="account.Users"
+
+# 登录页URL
+LOGIN_URL = "/login"

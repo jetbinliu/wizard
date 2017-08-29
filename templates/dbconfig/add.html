@@ -7,49 +7,48 @@
     </div>
     <div class="panel-body">
         <!--面版内容-->
-        <form class="form-horizontal" method="post" action="{% url 'dbconfig_add' %}"
-              onsubmit="return validateCallback(this);">
+        <form class="form-horizontal" method="post" action="{% url 'dbconfig_add' %}">
             {% csrf_token %}
             <fieldset>
+                <input type="hidden" id="pathname" name="pathname">
+
                 <div class="control-group">
-                    <label class="control-label">集群类型<span style="color:#f00">*</span></label>
-                    {% for key, value in CLUSTER_TYPE.items %}
-                        <label class="checkbox-inline">
-                            <input type="radio" name="cluster_type" value="{{ key }}" {% if forloop.first %}checked{% endif %}/>{{ value }}</label>
+                    <label class="control-label">集群名称<span style="color:#f00">*</span></label>
+                    <input class="input-xlarge" type="text" name="cluster_name" required/>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">集群角色<span style="color:#f00">*</span></label>
+                    {% for key, value in CLUSTER_ROLE.items %}
+                        <label class="checkbox-inline" style="vertical-align: top">
+                            <input type="radio" name="cluster_role" value="{{ key }}" {% if forloop.counter == 1 %}checked{% endif %}/>{{ value }}</label>
                     {% endfor %}
                 </div>
 
                 <div class="control-group">
-                    <label class="control-label">集群名称<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="cluster_name"/>
-                </div>
-
-                <div class="control-group">
                     <label class="control-label">集群地址<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="cluster_hosts"
-                    placeholder="多个地址请用逗号分隔"/>
+                    <input class="input-xlarge" type="text" name="cluster_host" required/>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">集群端口<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="cluster_port"/>
+                    <input class="input-xlarge" type="text" name="cluster_port" required/>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">登录用户<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="text" name="cluster_user"/>
+                    <input class="input-xlarge" type="text" name="cluster_user" required/>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">登录密码<span style="color:#f00">*</span></label>
-                    <input class="input-xlarge required" type="password" name="cluster_password"/>
+                    <input class="input-xlarge" type="password" name="cluster_password" required/>
                 </div>
 
                 <br>
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">保存</button>
-                    <!--<button class="btn" onclick="return httpRedirectAjax('{% url 'dbconfig_index' %}')">取消</button>-->
-                    <button class="btn" onclick="location.reload([bForceGet])">取消</button>
+                    <input type='button' class='btn btn-default' value='取消' onclick="normalRedirect();" />
                 </div>
             </fieldset>
         </form>
@@ -58,3 +57,8 @@
         面版底部
     </div>-->
 </div>
+
+<script type="text/javascript">
+    var pathname = sessionStorage.getItem('hide_history_url');
+    document.getElementById('pathname').value = pathname;
+</script>

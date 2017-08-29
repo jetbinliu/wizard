@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .inceptionDal import InceptionDao
+from dbconfig.dbconfigDal import getMasterConnStr
 
 inceptionDao = InceptionDao()
 
@@ -33,10 +34,11 @@ def simplecheck(request):
         finalResult['msg'] = 'SQL语句结尾没有以;结尾，请重新修改并提交！'
         return HttpResponse(json.dumps(finalResult), content_type='application/json')
     # 交给inception进行自动审核
-    result = inceptionDao.sqlautoReview(sqlContent, clusterName)
+    dictConn = getMasterConnStr(clusterName)
+    result = inceptionDao.sqlautoReview(dictConn, sqlContent)
     if result is None or len(result) == 0:
         finalResult['status'] = 1
-        finalResult['msg'] = 'inception返回的结果集为空！可能是SQL语句有语法错误'
+        finalResult['msg'] = '返回的结果集为空！可能是SQL语句有语法错误'
         return HttpResponse(json.dumps(finalResult), content_type='application/json')
     # 要把result转成JSON存进数据库里，方便SQL单子详细信息展示
     finalResult['data'] = result

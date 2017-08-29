@@ -20,7 +20,6 @@ $(document).ready(function () {
         $(".submenu").each(function () {
             Id = $(this).attr('id');
             if (Id != currentId) {
-                // $(this).attr("class", "submenu panel-collapse collapse");
                 $(this).collapse('hide');
                 // 其它菜单折叠后修改"箭头"为向左
                 $(this).prev().children("span").last().attr("class", "glyphicon glyphicon-menu-left");
@@ -38,26 +37,27 @@ $(document).ready(function () {
     //     }
     // );
 
-    // $('.submenu a').on(("click", "[data-stopPropagation]", function (event) {
-    //     event.stopPropagation();
-    // });
-    // $(".submenu a[data-stopPropagation]").click(function (event) {
-    //     event.stopPropagation();
-    //     $(this).addClass('active');
-    // });
-
+    // 点击二级菜单后不关闭
     $(".submenu a").click(function () {
-        $.cookie("navstation", $(this).html(), {path: "/"});
+        // $.cookie("navstation", $(this).html(), { path: "/" });
+        sessionStorage.navstation = $(this).html();
     });
 
-    var navstation = $.cookie("navstation");
+    // var navstation = $.cookie("navstation");
+    var navstation = sessionStorage.navstation;
     if (navstation != null) {
         $(".submenu a").each(function () {
             if ($(this).html() == navstation) {
                 $(this).addClass('active');
                 $(this).parent().attr("class", "submenu collapse in");
+                // $(this).parent().collapse('show');
                 $(this).parent().prev().children("span:last").attr("class", "glyphicon glyphicon-menu-down");
             }
         });
     }
+    // 点击首页后关闭侧边栏
+    $(".homePage").click(function () {
+        // $.cookie("navstation", null, { path: "/" });
+        sessionStorage.navstation = null;
+    });
 });

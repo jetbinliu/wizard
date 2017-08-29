@@ -3,7 +3,7 @@
 
 
 {% block content %}
-    <h4>单子名称：{{ workflowDetail.workflow_name }}</h4>
+    <h4>工单名称：{{ workflowDetail.workflow_name }}</h4>
     <hr>
     <table class="table table-striped table-hover">
         <thead>
@@ -74,7 +74,7 @@
             <th>
                 SQL内容
             </th>
-            <th width="110px">
+            <th>
                 自动审核结果
             </th>
             <th width="110px">
@@ -95,10 +95,14 @@
                     {{ forloop.counter }}
                 </td>
                 <td>
-                    {{ row.5 }}
+                    {% for sql in row.5 %}
+                        {{ sql }}{% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
                 </td>
                 <td>
-                    {{ row.4 }}
+                    {% for statement in row.4 %}
+                        {{ statement }}{% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
                 </td>
                 <td>
                     {{ row.6 }}
@@ -115,16 +119,8 @@
         </tbody>
     </table>
 
-    {% if workflowDetail.status == '自动审核不通过' %}
-        <div class="alert alert-dismissable alert-warning">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4>
-                {{ workflowDetail.status }}
-            </h4> <strong></strong>
-            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
-        </div>
 
-    {% elif workflowDetail.status == '等待审核人审核' %}
+    {% if workflowDetail.status == '等待审核人审核' %}
         {% if user.username in reviewMans %}
             <form action="/sqlreview/reject/" method="post" style="display:inline-block;">
                 {% csrf_token %}
@@ -169,17 +165,7 @@
         {% endif %}
 
 
-    {% elif workflowDetail.status == '发起人终止' %}
-        <div class="alert alert-dismissable alert-warning">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h4>
-               {{ workflowDetail.status }}
-            </h4> <strong></strong>
-            <a href="/sqlreview/editsql/{{ workflowDetail.id }}" id="reject_modification" class="alert-link">请修改</a>
-        </div>
-
-
-    {% elif workflowDetail.status == '审核人驳回' %}
+    {% elif workflowDetail.status in allowedToModify %}
         <div class="alert alert-dismissable alert-warning">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
             <h4>
@@ -189,17 +175,16 @@
         </div>
 
 
-
-
-    {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == '是' %}
-        <form action="/rollback/" method="get" style="display:inline-block;">
+    {% elif workflowDetail.status == '已正常结束' and workflowDetail.is_backup == 1 %}
+        <form action="/sqlreview/rollbacksql/" method="get" style="display:inline-block;">
             {% csrf_token %}
             <input type="hidden" name="workflowid" value="{{ workflowDetail.id }}">
-            <input type="submit" id="btnRollback" type="button" class="btn btn-default" data-loading-text="Loading..."
+            <input type="submit" id="btnRollback" type="button" class="btn btn-success" data-loading-text="Loading..."
                    value="查看回滚SQL"/>
 
-
     {% endif %}
+
+
 {% endblock content %}
 
 
